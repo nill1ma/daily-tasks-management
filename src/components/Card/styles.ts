@@ -3,10 +3,13 @@ import styled from "styled-components";
 export const CardContainer = styled.div`
     display: flex;
     flex-direction: column;
-    border: 1px solid;
+    border: none;
     border-radius: 5px;
     height: auto;
     cursor: move;
+    padding: 5px;
+    margin: 0 5px 10px 5px;
+    background-color: #161b22;
 `
 
 export const Title = styled.div`
