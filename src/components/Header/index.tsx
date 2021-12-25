@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HeaderContainer, Item } from "./styles";
 
 export default function Header() {
 
     const [tabs, setTabs] = useState([
-        { id: 1, label: 'Create Boards', active: false, to: "/create" },
-        { id: 2, label: 'Boards', active: false, to: "/" }
+        { id: 1, label: 'Boards', active: false, to: "/boards" },
+        { id: 2, label: 'Board', active: false, to: "/project/1" }
     ])
 
     const handleTabs = (id: number) => {

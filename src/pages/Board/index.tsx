@@ -1,25 +1,28 @@
 import Actions from "../../components/Actions";
 import Column from "../../components/Column";
-import { ICard } from "../../schemas/card";
+import { useCards } from "../../contexts/cards";
 import { ICoolumn } from "../../schemas/column";
 import { BoardContainer, ColumnsArea, Header } from "./styles";
 type TActions = {
     labelOption: string
 }
 
-const actions:TActions[] = [
-    {labelOption:'Add Card'},
-    {labelOption:'Add Column'}
+const actions: TActions[] = [
+    { labelOption: 'Add Board' },
+    // {labelOption:'Add Column'}
 ]
 export default function Board() {
-    const cards: ICard[] = [
-        { columnId: 'todo', title: 'Study English', description: 'Train listening, reading, writen, gramar and gramar' },
-        { columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-        { columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-        { columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-        { columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-        { columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' }
-    ]
+
+    const { cards } = useCards()
+
+    // const cardsMock: ICard[] = [
+    //     { id: 1, columnId: 'todo', title: 'Study English', description: 'Train listening, reading, writen, gramar and gramar' },
+    //     { id: 2, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
+    //     { id: 3, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
+    //     { id: 4, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
+    //     { id: 5, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
+    //     { id: 6, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' }
+    // ]
 
     const columns: ICoolumn[] = [
         { columnId: 'todo', columnName: 'To do' },
@@ -33,9 +36,9 @@ export default function Board() {
                 <h3>Daily tasks management</h3>
             </div>
         </Header>
-        <ColumnsArea length={columns.length}>
+        <ColumnsArea>
             {columns.map((column: ICoolumn) =>
-                <Column columnId={column.columnId} columnName={column.columnName} cards={cards} />
+                <Column key={column.columnId} columnId={column.columnId} columnName={column.columnName} />
             )}
         </ColumnsArea>
     </BoardContainer>

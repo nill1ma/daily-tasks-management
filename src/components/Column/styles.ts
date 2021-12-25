@@ -4,7 +4,7 @@ export const ColumnContainer = styled.div`
     display: flex;
     flex-direction: column;
     border: 1px solid;
-    height: 90%;
+    min-height: 65vh;
     min-width: 355px;
     max-width: 355px;
     background-color: #0d1117;
@@ -35,7 +35,6 @@ export const ColumnNameArea = styled.div`
         }
         :nth-child(2){
             margin-left: 5px;
-            padding: 10px 0;
         }
     }
 `

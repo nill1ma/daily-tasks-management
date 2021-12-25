@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
+import { useCards } from "../../contexts/cards";
+import { ICard } from "../../schemas/card";
 import Card from "../Card";
 import { CardsArea, ColumnContainer, ColumnNameArea } from "./styles";
 type ColumnProps = {
     columnId: string
     columnName: string
-    cards: Cards[]
-}
-
-type Cards = {
-    title: string
-    description: string
-    columnId: string
 }
 
 export default function Column(props: ColumnProps) {
-    const { columnName, cards, columnId } = props
+    const { columnName, columnId } = props
     const [cardsQtd, setCardsQtd] = useState<number>(0)
     // const [totalHeight, setTotalHeight] = useState(0)
 
+    const { cards, setCards } = useCards()
+
     useEffect(() => {
-        const { length } = cards.filter(card => card.columnId === columnId)
-        setCardsQtd(length)
+        if (cards && cards.length > 0) {
+            const { length } = cards.filter((card: ICard) => card.columnId === columnId)
+            setCardsQtd(length)
+        }
     }, [cards])
 
     return <ColumnContainer>
@@ -29,9 +28,9 @@ export default function Column(props: ColumnProps) {
             <span>{columnName}</span>
         </ColumnNameArea>
         <CardsArea>
-            {cards.map((card: Cards) => {
+            {(cards && cards.length > 0) && cards.map((card: ICard) => {
                 return card.columnId === columnId &&
-                    <Card columnId={card.columnId} title={card.title} description={card.description} />;                    
+                    <Card key={card.id} columnId={card.columnId} title={card.title} description={card.description} />;
             })}
         </CardsArea>
     </ColumnContainer>
