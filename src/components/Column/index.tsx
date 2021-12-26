@@ -11,7 +11,6 @@ type ColumnProps = {
 export default function Column(props: ColumnProps) {
     const { columnName, columnId } = props
     const [cardsQtd, setCardsQtd] = useState<number>(0)
-    // const [totalHeight, setTotalHeight] = useState(0)
 
     const { cards, setCards } = useCards()
 

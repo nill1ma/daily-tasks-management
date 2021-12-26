@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import Modal from 'react-modal';
+import { Link } from "react-router-dom";
 
 export const BoardsContainer = styled.div`
     width: 100vw;
@@ -24,9 +26,7 @@ export const BoardsArea = styled.div`
     width: 100%;
     display: flex;
     overflow-y:auto;
-    /* height: 100%; */
-    flex: 33.333333%;
-    flex-wrap: wrap;
+    flex-wrap: wrap; 
     &::-webkit-scrollbar{
         height: 10px;
     }
@@ -43,11 +43,13 @@ export const BoardsArea = styled.div`
     }
 `
 
-export const Board = styled.div`
+export const Board = styled(Link)`
+    text-decoration:none;
+    color:#fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
+    width: 31%;
     height: 150px;
     border: 1px solid #fff;
     border-radius: 10px;
@@ -68,5 +70,16 @@ export const Board = styled.div`
     }
     &:nth-child(3){
         margin-top: 0;
+    }
+`
+
+export const BoardModal = styled(Modal)`
+    input{
+        background-color: #161b22;
+        color: #fff;
+        border:solid #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 22px;
     }
 `

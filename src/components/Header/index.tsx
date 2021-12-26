@@ -4,11 +4,11 @@ import { HeaderContainer, Item } from "./styles";
 export default function Header() {
 
     const [tabs, setTabs] = useState([
-        { id: 1, label: 'Boards', active: false, to: "/boards" },
-        { id: 2, label: 'Board', active: false, to: "/project/1" }
+        { id: '1', label: 'Boards', active: false, to: "/" },
+        { id: '2', label: 'Board', active: false, to: "/project/1" }
     ])
 
-    const handleTabs = (id: number) => {
+    const handleTabs = (id: string) => {
         setTabs(prevState => {
             return [...prevState.map(prev => {
                 if (prev.id === id)

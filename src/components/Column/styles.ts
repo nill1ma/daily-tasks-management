@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Modal from 'react-modal';
 
 export const ColumnContainer = styled.div`
     display: flex;
@@ -54,5 +55,16 @@ export const CardsArea = styled.div`
         box-shadow: inset 0 0 6px rgba(0,0,0,.3);
         background-color: #fff;
         border: 1px solid #000
+    }
+`
+
+export const ColumnsdModal = styled(Modal)`
+    input{
+        background-color: #161b22;
+        color: #fff;
+        border:solid #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 22px;
     }
 `

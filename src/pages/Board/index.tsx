@@ -1,35 +1,97 @@
+import { useEffect, useState } from "react";
 import Actions from "../../components/Actions";
 import Column from "../../components/Column";
 import { useCards } from "../../contexts/cards";
+import { useColumns } from "../../contexts/columns";
+import { v4 as uuidv4 } from 'uuid';
+import { addItemInLocalStorage } from "../../helpers/storage";
 import { ICoolumn } from "../../schemas/column";
-import { BoardContainer, ColumnsArea, Header } from "./styles";
+import { BoardContainer, ColumndModal, ColumnsArea, Header } from "./styles";
+import { useStore } from "react-redux";
 type TActions = {
     labelOption: string
+    setContext: () => void
 }
 
-const actions: TActions[] = [
-    { labelOption: 'Add Board' },
-    // {labelOption:'Add Column'}
-]
 export default function Board() {
 
-    const { cards } = useCards()
+    // const { cards, setCards } = useCards()
+    const { columns, setColumns } = useColumns()
 
-    // const cardsMock: ICard[] = [
-    //     { id: 1, columnId: 'todo', title: 'Study English', description: 'Train listening, reading, writen, gramar and gramar' },
-    //     { id: 2, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-    //     { id: 3, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-    //     { id: 4, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-    //     { id: 5, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' },
-    //     { id: 6, columnId: 'inprogress', title: 'Have lunch', description: 'Eat more vegetables, beans and rices.' }
-    // ]
+    function handleCards() {
+        console.log('Working')
+    }
 
-    const columns: ICoolumn[] = [
-        { columnId: 'todo', columnName: 'To do' },
-        { columnId: 'inprogress', columnName: 'In Progress' },
-        { columnId: 'done', columnName: 'Done' }
+    const actions: TActions[] = [
+        { labelOption: 'Add Card', setContext: handleCards }
+        // {labelOption:'Add Column'}
     ]
+
+
+    const [isModalOpened, setIsModalOpened] = useState(false)
+    const [boardName, setBoardName] = useState('')
+
+    function handleSetColumns(storeColumns: ICoolumn[]) {
+        setColumns([...storeColumns])
+    }
+
+    const [boardId, setBoardId] = useState('')
+
+    useEffect(() => {
+        const url = window.location.href.split('/')
+        setBoardId(url[url.length - 1])
+    }, [columns])
+
+    const handle = () => setIsModalOpened(prev => prev ? false : true)
+
+    const save = (key: string) => {
+        const value = { id: uuidv4(), columnName: boardName, boardId }
+        const storage = addItemInLocalStorage<ICoolumn>(key, value)
+        handleSetColumns(storage)
+    }
+
     return <BoardContainer>
+        <ColumndModal
+            isOpen={isModalOpened}
+            onRequestClose={handle}
+            style={{
+                overlay: {
+                    border: '5px solid #fff',
+                    width: '50vw',
+                    margin: 'auto',
+                    opacity: '100%',
+                    height: '50vh',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                },
+                content: {
+                    background: '#161b22',
+                    overflow: "auto",
+                    WebkitOverflowScrolling: "touch",
+                    borderRadius: "4px",
+                    outline: "none",
+                    border: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: '#fff',
+                    height: '50vh',
+                }
+            }}
+        >
+            <input type={'text'} onChange={(e) => setBoardName(e.target.value)} />
+            <button
+                onClick={() => save('columns')}
+                style={
+                    {
+                        padding: '10px',
+                        cursor: 'pointer', marginTop: '10px'
+                    }}>Save</button>
+
+        </ColumndModal>
         <Header>
             <Actions actions={actions} findBy="Card" />
             <div className="projetName">
@@ -38,7 +100,7 @@ export default function Board() {
         </Header>
         <ColumnsArea>
             {columns.map((column: ICoolumn) =>
-                <Column key={column.columnId} columnId={column.columnId} columnName={column.columnName} />
+                <Column key={column.id} columnId={column.id} columnName={column.columnName} />
             )}
         </ColumnsArea>
     </BoardContainer>

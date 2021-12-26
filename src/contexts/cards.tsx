@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 import { ICard } from "../schemas/card";
 
 const initialState: ICard[] = [{
-    id: 0,
+    id: '',
     title: '',
     description: '',
     columnId: '',
@@ -12,15 +12,15 @@ type Props = {
 }
 
 type TCardsState = {
-    cards: ICard[] | null
-    setCards: React.Dispatch<React.SetStateAction<ICard[] | null>>
+    cards: ICard[]
+    setCards: React.Dispatch<React.SetStateAction<ICard[] | any>>
 }
 
 const CardsContext = createContext<ICard[] | any>(initialState)
 
 export default function CardsProvider({ children }: Props) {
 
-    const [cards, setCards] = useState<TCardsState[] | null>(null)
+    const [cards, setCards] = useState<TCardsState[] | any>([])
     return <CardsContext.Provider value={{ cards, setCards }}>
         {children}
     </CardsContext.Provider>

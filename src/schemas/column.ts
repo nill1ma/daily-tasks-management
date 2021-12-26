@@ -1,4 +1,5 @@
 export interface ICoolumn {
-    columnId: string
+    id: string
     columnName: string
+    boardId: string
 }
