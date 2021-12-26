@@ -8,7 +8,7 @@ type Props = {
 }
 type BoardsState = {
     boards: IBoard[]
-    setBoards: React.Dispatch<React.SetStateAction<IBoard[] | any>>
+    setBoards: React.Dispatch<React.SetStateAction<IBoard[]>>
 }
 
 const BoardsContext = createContext<IBoard[] | any>([{}] as IBoard[])

@@ -17,13 +17,6 @@ export default function Actions(props: ActionsProps) {
 
     const { cards, setCards } = useCards()
 
-    useEffect(() => {
-        console.log('cards')
-        console.log(cards)
-        console.log('cards')
-    }, [cards])
-
-
     const { actions, findBy } = props
     return <ActionsContainer>
         <input type="text" name="filter" placeholder={`Filter ${findBy}`} />

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import Actions from "../../components/Actions";
 import Column from "../../components/Column";
-import { useCards } from "../../contexts/cards";
+import { useBoards } from "../../contexts/boards";
 import { useColumns } from "../../contexts/columns";
-import { v4 as uuidv4 } from 'uuid';
 import { addItemInLocalStorage } from "../../helpers/storage";
+import { IBoard } from "../../schemas/board";
 import { ICoolumn } from "../../schemas/column";
 import { BoardContainer, ColumndModal, ColumnsArea, Header } from "./styles";
-import { useStore } from "react-redux";
 type TActions = {
     labelOption: string
     setContext: () => void
@@ -15,37 +15,40 @@ type TActions = {
 
 export default function Board() {
 
-    // const { cards, setCards } = useCards()
     const { columns, setColumns } = useColumns()
+    const { boards, setBoards } = useBoards()
+    const [boardSession, setBoardSession] = useState({} as IBoard)
 
     function handleCards() {
         console.log('Working')
     }
 
-    const actions: TActions[] = [
-        { labelOption: 'Add Card', setContext: handleCards }
-        // {labelOption:'Add Column'}
-    ]
-
+    useEffect(() => {
+        const { active, ...board } = boards.find((board: IBoard) => board.active)
+        setBoardSession({ ...board })
+    }, [boards])
 
     const [isModalOpened, setIsModalOpened] = useState(false)
-    const [boardName, setBoardName] = useState('')
+    const [columnName, setColumnName] = useState('')
 
     function handleSetColumns(storeColumns: ICoolumn[]) {
         setColumns([...storeColumns])
     }
 
-    const [boardId, setBoardId] = useState('')
+    const handleModal = () => setIsModalOpened(prev => prev ? false : true)
+
+    const actions: TActions[] = [
+        { labelOption: 'Add Card', setContext: handleCards },
+        { labelOption: 'Add Column', setContext: handleModal }
+    ]
 
     useEffect(() => {
-        const url = window.location.href.split('/')
-        setBoardId(url[url.length - 1])
-    }, [columns])
-
-    const handle = () => setIsModalOpened(prev => prev ? false : true)
+        console.log('boards updated')
+        console.log(boards)
+    }, [])
 
     const save = (key: string) => {
-        const value = { id: uuidv4(), columnName: boardName, boardId }
+        const value = { id: uuidv4(), columnName: columnName, boardId: boardSession.id }
         const storage = addItemInLocalStorage<ICoolumn>(key, value)
         handleSetColumns(storage)
     }
@@ -53,7 +56,7 @@ export default function Board() {
     return <BoardContainer>
         <ColumndModal
             isOpen={isModalOpened}
-            onRequestClose={handle}
+            onRequestClose={handleModal}
             style={{
                 overlay: {
                     border: '5px solid #fff',
@@ -82,7 +85,7 @@ export default function Board() {
                 }
             }}
         >
-            <input type={'text'} onChange={(e) => setBoardName(e.target.value)} />
+            <input type={'text'} onChange={(e) => setColumnName(e.target.value)} />
             <button
                 onClick={() => save('columns')}
                 style={
@@ -95,13 +98,16 @@ export default function Board() {
         <Header>
             <Actions actions={actions} findBy="Card" />
             <div className="projetName">
-                <h3>Daily tasks management</h3>
+                <h3>{boardSession.name}</h3>
             </div>
         </Header>
         <ColumnsArea>
-            {columns.map((column: ICoolumn) =>
-                <Column key={column.id} columnId={column.id} columnName={column.columnName} />
-            )}
+            {columns.filter((column: ICoolumn) => column.boardId === boardSession.id)
+                .map((column: ICoolumn) =>
+                    <Column key={column.id}
+                        columnId={column.id}
+                        columnName={column.columnName} />
+                )}
         </ColumnsArea>
     </BoardContainer>
 }

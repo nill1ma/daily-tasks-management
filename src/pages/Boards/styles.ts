@@ -43,7 +43,7 @@ export const BoardsArea = styled.div`
     }
 `
 
-export const Board = styled(Link)`
+export const Board = styled.div`
     text-decoration:none;
     color:#fff;
     display: flex;

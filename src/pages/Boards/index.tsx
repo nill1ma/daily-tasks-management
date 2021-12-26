@@ -1,10 +1,11 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 import Actions from "../../components/Actions";
 import { useBoards } from "../../contexts/boards";
-import { v4 as uuidv4 } from 'uuid';
-import { addItemInLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
+import { addItemInLocalStorage } from "../../helpers/storage";
 import { IBoard } from "../../schemas/board";
 import { Board, BoardModal, BoardsArea, BoardsContainer, Header } from "./styles";
-import { useState } from "react";
 type TActions = {
     labelOption: string
     setContext: () => void
@@ -14,20 +15,31 @@ export default function Boards() {
     const { boards, setBoards } = useBoards()
     const [isModalOpened, setIsModalOpened] = useState(false)
     const [boardName, setBoardName] = useState('')
+    const navigate = useNavigate()
 
     function handleSetBoards(storeBoards: IBoard[]) {
         setBoards([...storeBoards])
     }
 
-    const handle = () => setIsModalOpened(prev => prev ? false : true)
+    const chooseBoard = (currentId: string) => {
+        boards.map((board: IBoard) => {
+            board.id === currentId ? board.active = true : board.active = false
+            return board
+        })
+        setBoards([...boards])
+        navigate(`/project/${currentId}`)
+    }
+
+
+    const handleModal = () => setIsModalOpened(prev => prev ? false : true)
 
     const actions: TActions[] = [{
         labelOption: 'Add Board',
-        setContext: handle
+        setContext: handleModal
     }]
 
     const save = (key: string) => {
-        const value = { id: uuidv4(), name: boardName }
+        const value = { id: uuidv4(), name: boardName, active: false }
         const storage = addItemInLocalStorage<IBoard>(key, value)
         handleSetBoards(storage)
     }
@@ -36,7 +48,7 @@ export default function Boards() {
     return <BoardsContainer>
         <BoardModal
             isOpen={isModalOpened}
-            onRequestClose={handle}
+            onRequestClose={handleModal}
             style={{
                 overlay: {
                     border: '5px solid #fff',
@@ -82,8 +94,8 @@ export default function Boards() {
             </div>
         </Header>
         <BoardsArea>
-            {boards.map((board: IBoard) =>
-                <Board to={`project/${board.id}`}>{board.name}</Board>
+            {boards.map(({ id, name }: IBoard) =>
+                <Board onClick={() => chooseBoard(id)}>{name}</Board>
             )}
         </BoardsArea>
     </BoardsContainer>
