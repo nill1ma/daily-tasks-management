@@ -6,7 +6,6 @@ export const ActionsContainer = styled.div`
     align-items: center;
     width: 100%;
     padding-top: 10px;
-
     input{
         background-color: #161b22;
         color: #fff;

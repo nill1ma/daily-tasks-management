@@ -1,100 +1,66 @@
+import { faPlus, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Actions from "../../components/Actions";
 import Column from "../../components/Column";
+import GenericModal from "../../components/GenericModal";
 import { useBoards } from "../../contexts/boards";
+import { useCards } from "../../contexts/cards";
 import { useColumns } from "../../contexts/columns";
-import { addItemInLocalStorage } from "../../helpers/storage";
-import { IBoard } from "../../schemas/board";
+import { addItemInLocalStorage, getLocalStorage } from "../../helpers/storage";
+import { ICard } from "../../schemas/card";
 import { ICoolumn } from "../../schemas/column";
-import { BoardContainer, ColumndModal, ColumnsArea, Header } from "./styles";
+import { BoardContainer, ColumnsArea, Header } from "./styles";
 type TActions = {
     labelOption: string
-    setContext: () => void
+    handleModal: (isItCard?: boolean) => void
+    icon: IconDefinition
 }
 
 export default function Board() {
 
     const { columns, setColumns } = useColumns()
-    const { boards, setBoards } = useBoards()
-    const [boardSession, setBoardSession] = useState({} as IBoard)
-
-    function handleCards() {
-        console.log('Working')
-    }
-
-    useEffect(() => {
-        const { active, ...board } = boards.find((board: IBoard) => board.active)
-        setBoardSession({ ...board })
-    }, [boards])
-
+    const { cards, setCards } = useCards()
+    const { boards } = useBoards()
     const [isModalOpened, setIsModalOpened] = useState(false)
     const [columnName, setColumnName] = useState('')
+    const [boardSession, setBoardSession] = useState({ id: '', name: '' })
+    const [storageKey, setStorageKey] = useState('')
+
+    useEffect(() => {
+        const { id, name } = getLocalStorage('currentBoard')
+        setBoardSession({ id, name })
+    }, [boards])
 
     function handleSetColumns(storeColumns: ICoolumn[]) {
         setColumns([...storeColumns])
     }
 
-    const handleModal = () => setIsModalOpened(prev => prev ? false : true)
+    const handleModal = (isItCard?: boolean) => {
+        setIsModalOpened(prev => prev ? false : true)
+        isItCard ? setStorageKey('cards') : setStorageKey('')
+    }
 
     const actions: TActions[] = [
-        { labelOption: 'Add Card', setContext: handleCards },
-        { labelOption: 'Add Column', setContext: handleModal }
+        { labelOption: 'Add Column', handleModal: handleModal, icon: faPlus }
     ]
 
-    useEffect(() => {
-        console.log('boards updated')
-        console.log(boards)
-    }, [])
-
     const save = (key: string) => {
-        const value = { id: uuidv4(), columnName: columnName, boardId: boardSession.id }
-        const storage = addItemInLocalStorage<ICoolumn>(key, value)
-        handleSetColumns(storage)
+        if ('columns' === key) {
+            const value = { id: uuidv4(), columnName: columnName, boardId: boardSession.id }
+            const storage = addItemInLocalStorage<ICoolumn>(key, value)
+            setColumns([...storage])
+        }
     }
 
     return <BoardContainer>
-        <ColumndModal
-            isOpen={isModalOpened}
-            onRequestClose={handleModal}
-            style={{
-                overlay: {
-                    border: '5px solid #fff',
-                    width: '50vw',
-                    margin: 'auto',
-                    opacity: '100%',
-                    height: '50vh',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                },
-                content: {
-                    background: '#161b22',
-                    overflow: "auto",
-                    WebkitOverflowScrolling: "touch",
-                    borderRadius: "4px",
-                    outline: "none",
-                    border: 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: '#fff',
-                    height: '50vh',
-                }
-            }}
-        >
-            <input type={'text'} onChange={(e) => setColumnName(e.target.value)} />
-            <button
-                onClick={() => save('columns')}
-                style={
-                    {
-                        padding: '10px',
-                        cursor: 'pointer', marginTop: '10px'
-                    }}>Save</button>
-
-        </ColumndModal>
+        <GenericModal
+            isModalOpened={isModalOpened}
+            handleModal={handleModal}
+            setNameOf={setColumnName}
+            save={save}
+            storageKey={storageKey}
+        />
         <Header>
             <Actions actions={actions} findBy="Card" />
             <div className="projetName">
@@ -106,7 +72,8 @@ export default function Board() {
                 .map((column: ICoolumn) =>
                     <Column key={column.id}
                         columnId={column.id}
-                        columnName={column.columnName} />
+                        columnName={column.columnName}
+                        handleModal={handleModal} />
                 )}
         </ColumnsArea>
     </BoardContainer>

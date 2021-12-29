@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Modal from 'react-modal';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const ColumnContainer = styled.div`
     display: flex;
@@ -15,27 +16,32 @@ export const ColumnContainer = styled.div`
         margin-left: 10px;
     }
     &:nth-child(1){
-        margin-left: 0;
+        /* margin-left: 0; */
     }
 `
-export const ColumnNameArea = styled.div`
+export const ColumnHeader = styled.div`
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 5px;
-    span {
-        :nth-child(1){
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border:none;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            font-weight: bold;
-            background-color: #808080;
-        }
-        :nth-child(2){
-            margin-left: 5px;
+    div{
+        display: flex;
+        align-items: center;
+        span {
+            :nth-child(1){
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border:none;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                font-weight: bold;
+                background-color: #808080;
+            }
+            :nth-child(2){
+                margin-left: 5px;
+            }
         }
     }
 `
@@ -67,4 +73,7 @@ export const ColumnsdModal = styled(Modal)`
         border-radius: 5px;
         font-size: 22px;
     }
+`
+export const FaPlus = styled(FontAwesomeIcon)`
+    cursor: pointer;
 `

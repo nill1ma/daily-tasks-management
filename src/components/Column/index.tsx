@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useCards } from "../../contexts/cards";
 import { ICard } from "../../schemas/card";
 import Card from "../Card";
-import { CardsArea, ColumnContainer, ColumnNameArea } from "./styles";
+import { CardsArea, ColumnContainer, ColumnHeader, FaPlus } from "./styles";
 type ColumnProps = {
     columnId: string
     columnName: string
+    handleModal: (isModalCard: boolean) => void
 }
 
-export default function Column(props: ColumnProps) {
-    const { columnName, columnId } = props
+export default function Column({ columnName, columnId, handleModal }: ColumnProps) {
     const [cardsQtd, setCardsQtd] = useState<number>(0)
 
-    const { cards, setCards } = useCards()
+    const { cards } = useCards()
 
     useEffect(() => {
         if (cards && cards.length > 0) {
@@ -22,10 +23,13 @@ export default function Column(props: ColumnProps) {
     }, [cards])
 
     return <ColumnContainer>
-        <ColumnNameArea>
-            <span>{cardsQtd}</span>
-            <span>{columnName}</span>
-        </ColumnNameArea>
+        <ColumnHeader>
+            <div>
+                <span>{cardsQtd}</span>
+                <span>{columnName}</span>
+            </div>
+            <FaPlus onClick={() => handleModal(true)} icon={faPlus} />
+        </ColumnHeader>
         <CardsArea>
             {(cards && cards.length > 0) && cards.map((card: ICard) => {
                 return card.columnId === columnId &&

@@ -26,7 +26,7 @@ export const ColumnsArea = styled.div`
     width: 100%;
     display: flex;
     overflow-x:auto;
-    padding-left: 10px;
+    /* margin-left: 10px; */
     &::-webkit-scrollbar{
         height: 10px;
     }

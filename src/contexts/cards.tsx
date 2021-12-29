@@ -1,12 +1,8 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
+import { getLocalStorage } from "../helpers/storage";
 import { ICard } from "../schemas/card";
 
-const initialState: ICard[] = [{
-    id: '',
-    title: '',
-    description: '',
-    columnId: '',
-}]
+const initialState: ICard[] = getLocalStorage('cards')
 type Props = {
     children: ReactNode
 }
@@ -20,7 +16,7 @@ const CardsContext = createContext<ICard[] | any>(initialState)
 
 export default function CardsProvider({ children }: Props) {
 
-    const [cards, setCards] = useState<TCardsState[] | any>([])
+    const [cards, setCards] = useState<TCardsState[] | any>(initialState)
     return <CardsContext.Provider value={{ cards, setCards }}>
         {children}
     </CardsContext.Provider>

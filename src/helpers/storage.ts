@@ -10,7 +10,14 @@ function getLocalStorage(key: string) {
 
 function addItemInLocalStorage<T>(key: string, value: TGenericStorage): T[] {
     const storage = storageJsonParse(key)
-    localStorage.setItem(key, JSON.stringify([...storage, value]))
+    switch (key) {
+        case 'currentBoard':
+            localStorage.setItem(key, JSON.stringify({ ...value }))
+            break;
+        default:
+            localStorage.setItem(key, JSON.stringify([...storage, value]))
+            break;
+    }
     return getLocalStorage(key)
 }
 

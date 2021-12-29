@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Modal from 'react-modal';
-import { Link } from "react-router-dom";
 
 export const BoardsContainer = styled.div`
     width: 100vw;
