@@ -7,7 +7,7 @@ import { CardsArea, ColumnContainer, ColumnHeader, FaPlus } from "./styles";
 type ColumnProps = {
     columnId: string
     columnName: string
-    handleModal: (isModalCard: boolean) => void
+    handleModal: (isModalCard: boolean, columnId:string) => void
 }
 
 export default function Column({ columnName, columnId, handleModal }: ColumnProps) {
@@ -28,7 +28,7 @@ export default function Column({ columnName, columnId, handleModal }: ColumnProp
                 <span>{cardsQtd}</span>
                 <span>{columnName}</span>
             </div>
-            <FaPlus onClick={() => handleModal(true)} icon={faPlus} />
+            <FaPlus onClick={() => handleModal(true, columnId)} icon={faPlus} />
         </ColumnHeader>
         <CardsArea>
             {(cards && cards.length > 0) && cards.map((card: ICard) => {

@@ -50,7 +50,7 @@ export default function Boards() {
         <GenericModal
             isModalOpened={isModalOpened}
             handleModal={handleModal}
-            setNameOf={setBoardName}
+            setLabelOf={setBoardName}
             save={save}
             storageKey={'boards'}
         />

@@ -3,19 +3,22 @@ import { BoardModal, SaveButton } from "./styles";
 type GenericModalProps = {
     isModalOpened: boolean
     handleModal: () => void
-    setNameOf: React.Dispatch<React.SetStateAction<string>>
+    setLabelOf: React.Dispatch<React.SetStateAction<string>>
     save: (key: string) => void
     storageKey: string
-    idColumn?:string
+    setDescription?: React.Dispatch<React.SetStateAction<string>>
+    idColumn?: string
 }
 
 export default function GenericModal(
     {
         isModalOpened,
         handleModal,
-        setNameOf,
+        setLabelOf,
         save,
-        storageKey
+        storageKey,
+        setDescription,
+        idColumn
     }
         : GenericModalProps) {
     return <BoardModal
@@ -49,8 +52,8 @@ export default function GenericModal(
             }
         }}
     >
-        <input type={'text'} onChange={(e) => setNameOf(e.target.value)} />
-        {'cards' === storageKey && <textarea name="" />}
+        <input type={'text'} onChange={(e) => setLabelOf(e.target.value)} />
+        {('cards' === storageKey && setDescription) && <textarea onChange={(e) => setDescription(e.target.value)} />}
         <SaveButton onClick={() => save(storageKey)}>Save</SaveButton>
     </BoardModal>
 }

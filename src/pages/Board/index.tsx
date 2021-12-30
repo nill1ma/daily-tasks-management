@@ -20,11 +20,13 @@ type TActions = {
 export default function Board() {
 
     const { columns, setColumns } = useColumns()
-    const { cards, setCards } = useCards()
+    const { setCards } = useCards()
     const { boards } = useBoards()
     const [isModalOpened, setIsModalOpened] = useState(false)
-    const [columnName, setColumnName] = useState('')
+    const [label, setLabel] = useState('')
+    const [cardDescription, setCardDescription] = useState('')
     const [boardSession, setBoardSession] = useState({ id: '', name: '' })
+    const [currentColumnId, setCurrentColumnId] = useState('')
     const [storageKey, setStorageKey] = useState('')
 
     useEffect(() => {
@@ -32,13 +34,14 @@ export default function Board() {
         setBoardSession({ id, name })
     }, [boards])
 
-    function handleSetColumns(storeColumns: ICoolumn[]) {
-        setColumns([...storeColumns])
-    }
-
-    const handleModal = (isItCard?: boolean) => {
+    const handleModal = (isItCard?: boolean, columnId?: string) => {
         setIsModalOpened(prev => prev ? false : true)
-        isItCard ? setStorageKey('cards') : setStorageKey('')
+        if (isItCard) {
+            setCurrentColumnId(columnId!)
+            setStorageKey('cards')
+            return
+        }
+        setStorageKey('columns')
     }
 
     const actions: TActions[] = [
@@ -46,10 +49,15 @@ export default function Board() {
     ]
 
     const save = (key: string) => {
+        const id = uuidv4()
         if ('columns' === key) {
-            const value = { id: uuidv4(), columnName: columnName, boardId: boardSession.id }
+            const value = { id, columnName: label, boardId: boardSession.id }
             const storage = addItemInLocalStorage<ICoolumn>(key, value)
             setColumns([...storage])
+        } else if ('cards' === key) {
+            const value = { id, title: label, description: cardDescription, columnId:currentColumnId }
+            const storage = addItemInLocalStorage<ICard>(key, value)
+            setCards([...storage])
         }
     }
 
@@ -57,9 +65,10 @@ export default function Board() {
         <GenericModal
             isModalOpened={isModalOpened}
             handleModal={handleModal}
-            setNameOf={setColumnName}
+            setLabelOf={setLabel}
             save={save}
             storageKey={storageKey}
+            setDescription={setCardDescription}
         />
         <Header>
             <Actions actions={actions} findBy="Card" />
