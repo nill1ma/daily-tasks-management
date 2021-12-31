@@ -19,9 +19,9 @@ type TActions = {
 
 export default function Board() {
 
+    const { boards } = useBoards()
     const { columns, setColumns } = useColumns()
     const { setCards } = useCards()
-    const { boards } = useBoards()
     const [isModalOpened, setIsModalOpened] = useState(false)
     const [label, setLabel] = useState('')
     const [cardDescription, setCardDescription] = useState('')
@@ -55,7 +55,7 @@ export default function Board() {
             const storage = addItemInLocalStorage<ICoolumn>(key, value)
             setColumns([...storage])
         } else if ('cards' === key) {
-            const value = { id, title: label, description: cardDescription, columnId:currentColumnId }
+            const value = { id, title: label, description: cardDescription, columnId: currentColumnId }
             const storage = addItemInLocalStorage<ICard>(key, value)
             setCards([...storage])
         }
@@ -77,11 +77,11 @@ export default function Board() {
             </div>
         </Header>
         <ColumnsArea>
-            {columns.filter((column: ICoolumn) => column.boardId === boardSession.id)
-                .map((column: ICoolumn) =>
-                    <Column key={column.id}
-                        columnId={column.id}
-                        columnName={column.columnName}
+            {columns.filter(({ boardId }: ICoolumn) => boardId === boardSession.id)
+                .map(({ id, columnName }: ICoolumn) =>
+                    <Column key={id}
+                        columnId={id}
+                        columnName={columnName}
                         handleModal={handleModal} />
                 )}
         </ColumnsArea>

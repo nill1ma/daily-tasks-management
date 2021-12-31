@@ -20,17 +20,12 @@ export default function Boards() {
     const [boardName, setBoardName] = useState('')
     const navigate = useNavigate()
 
-    function handleSetBoards(storeBoards: IBoard[]) {
-        setBoards([...storeBoards])
-    }
-
     const chooseBoard = (currentId: string) => {
         const index = boards.findIndex((board: IBoard) => board.id === currentId)
         const { id, name } = boards[index]
         addItemInLocalStorage('currentBoard', { id, name })
         navigate(`/project/${currentId}`)
     }
-
 
     const handleModal = () => setIsModalOpened(prev => prev ? false : true)
 
@@ -43,7 +38,7 @@ export default function Boards() {
     const save = (key: string) => {
         const value = { id: uuidv4(), name: boardName, active: false }
         const storage = addItemInLocalStorage<IBoard>(key, value)
-        handleSetBoards(storage)
+        setBoards([...storage])
     }
 
     return <BoardsContainer>
