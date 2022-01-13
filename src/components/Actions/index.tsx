@@ -1,12 +1,6 @@
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { useCards } from "../../contexts/cards";
+import { TActions } from "../../schemas/actions";
 import { ActionsContainer, FaPlus } from "./styles";
-
-type TActions = {
-    labelOption: string
-    handleModal: (isItCard?: boolean) => void
-    icon: IconDefinition
-}
 
 type ActionsProps = {
     actions: TActions[]

@@ -1,4 +1,4 @@
-import { faFolderPlus, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -6,13 +6,9 @@ import Actions from "../../components/Actions";
 import GenericModal from "../../components/GenericModal";
 import { useBoards } from "../../contexts/boards";
 import { addItemInLocalStorage } from "../../helpers/storage";
+import { TActions } from "../../schemas/actions";
 import { IBoard } from "../../schemas/board";
 import { Board, BoardsArea, BoardsContainer, Header } from "./styles";
-type TActions = {
-    labelOption: string
-    handleModal: () => void
-    icon: IconDefinition
-}
 
 export default function Boards() {
     const { boards, setBoards } = useBoards()

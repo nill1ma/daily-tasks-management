@@ -1,5 +1,5 @@
-import { faPlus, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { DragEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Actions from "../../components/Actions";
 import Column from "../../components/Column";
@@ -8,14 +8,10 @@ import { useBoards } from "../../contexts/boards";
 import { useCards } from "../../contexts/cards";
 import { useColumns } from "../../contexts/columns";
 import { addItemInLocalStorage, getLocalStorage } from "../../helpers/storage";
+import { TActions } from "../../schemas/actions";
 import { ICard } from "../../schemas/card";
 import { ICoolumn } from "../../schemas/column";
 import { BoardContainer, ColumnsArea, Header } from "./styles";
-type TActions = {
-    labelOption: string
-    handleModal: (isItCard?: boolean) => void
-    icon: IconDefinition
-}
 
 export default function Board() {
 
@@ -50,16 +46,12 @@ export default function Board() {
 
     const save = (key: string) => {
         const id = uuidv4()
-        if ('columns' === key) {
-            const value = { id, columnName: label, boardId: boardSession.id }
-            const storage = addItemInLocalStorage<ICoolumn>(key, value)
-            setColumns([...storage])
-        } else if ('cards' === key) {
-            const value = { id, title: label, description: cardDescription, columnId: currentColumnId }
-            const storage = addItemInLocalStorage<ICard>(key, value)
-            setCards([...storage])
-        }
+        const value = { id, label, ...getRestColumnOrCardObject(key) }
+        const storage = addItemInLocalStorage<ICard | ICoolumn>(key, value)
+        'columns' === key ? setColumns([...storage]) : setCards([...storage])
     }
+
+    const getRestColumnOrCardObject = (key: string) => 'columns' === key ? { boardId: boardSession.id } : { description: cardDescription, columnId: currentColumnId }
 
     return <BoardContainer>
         <GenericModal
@@ -78,10 +70,10 @@ export default function Board() {
         </Header>
         <ColumnsArea>
             {columns.filter(({ boardId }: ICoolumn) => boardId === boardSession.id)
-                .map(({ id, columnName }: ICoolumn) =>
+                .map(({ id, label }: ICoolumn) =>
                     <Column key={id}
                         columnId={id}
-                        columnName={columnName}
+                        label={label}
                         handleModal={handleModal} />
                 )}
         </ColumnsArea>

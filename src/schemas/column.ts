@@ -1,5 +1,5 @@
 export interface ICoolumn {
     id: string
-    columnName: string
+    label: string
     boardId: string
 }
