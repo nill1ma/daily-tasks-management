@@ -21,6 +21,11 @@ function addItemInLocalStorage<T>(key: string, value: TGenericStorage): T[] {
     return getLocalStorage(key)
 }
 
+function updateItemInLocalStorage<T>(key: string, storage: TGenericStorage[]): T[] {
+    localStorage.setItem(key, JSON.stringify([...storage]))
+    return getLocalStorage(key)
+}
+
 function removeItemFromLocalStorage<T>(key: string, itemId: string): T[] {
     const storage = storageJsonParse(key)
     const updatedStorage = storage.filter((item: TGenericStorage) => item.id !== itemId)
@@ -33,5 +38,6 @@ const storageJsonParse = (key: string) => JSON.parse(localStorage.getItem(key)! 
 export {
     getLocalStorage,
     addItemInLocalStorage,
+    updateItemInLocalStorage,
     removeItemFromLocalStorage
 }
