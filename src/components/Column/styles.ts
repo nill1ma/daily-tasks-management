@@ -15,8 +15,15 @@ export const ColumnContainer = styled.div`
     &:nth-child(n){
         margin-left: 10px;
     }
-    &:nth-child(1){
-        /* margin-left: 0; */
+    @media(max-width: 610px) {
+        min-width: 95%;
+        margin-right: 10px;
+        :nth-child(n){
+            margin-top: 10px;
+        }
+        :nth-child(1){
+            margin-top: 0;
+        }
     }
 `
 export const ColumnHeader = styled.div`

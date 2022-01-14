@@ -41,6 +41,9 @@ export const ColumnsArea = styled.div`
         background-color: #fff;
         border: 1px solid #000
     }
+    @media(max-width: 610px) {
+        flex-direction: column;
+    }
 `
 
 export const ColumndModal = styled(Modal)`

@@ -1,10 +1,11 @@
-import { DragEvent, useEffect, useState } from "react";
+import { DragEvent, useCallback, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useCards } from "../../contexts/cards";
 import { ICard } from "../../schemas/card";
 import Card from "../Card";
 import { CardsArea, ColumnContainer, ColumnHeader, FaPlus } from "./styles";
 import { updateItemInLocalStorage } from "../../helpers/storage";
+
 type ColumnProps = {
     columnId: string
     label: string
@@ -12,23 +13,26 @@ type ColumnProps = {
 }
 
 export default function Column({ label, columnId, handleModal }: ColumnProps) {
-    const [cardsQtd, setCardsQtd] = useState<number>(0)
+    const [cardsLength, setCardsLength] = useState<number>(0)
 
     const { cards, setCards } = useCards()
 
-    useEffect(() => {
+    const getCardsLength = useCallback(() => {
         if (cards && cards.length > 0) {
             const { length } = cards.filter((card: ICard) => card.columnId === columnId)
-            setCardsQtd(length)
+            setCardsLength(length)
+            console.log('testing inside call')
         }
     }, [cards])
+
+    useEffect(() => {
+        getCardsLength()
+    }, [getCardsLength])
 
     const drop = (e: DragEvent) => {
         e.preventDefault()
         const cardId = e.dataTransfer.getData('cardId')
-        const card = document.getElementById(cardId)
         updateCardsDroped(cardId)
-        console.log('Dragble', cardId)
     }
 
     const updateCardsDroped = (cardId: string) => {
@@ -49,10 +53,10 @@ export default function Column({ label, columnId, handleModal }: ColumnProps) {
     return <ColumnContainer onDrop={drop} onDragOver={dragOver} id={columnId}>
         <ColumnHeader>
             <div>
-                <span>{cardsQtd}</span>
+                <span>{cardsLength}</span>
                 <span>{label}</span>
             </div>
-            <FaPlus onClick={() => handleModal(true, columnId)} icon={faPlus} />
+            <FaPlus onClick={useCallback(() => handleModal(true, columnId), [])} icon={faPlus} />
         </ColumnHeader>
         <CardsArea>
             {(cards && cards.length > 0) && cards.map(({ id, columnId: cardColumnId, label, description }: ICard) => {

@@ -1,4 +1,3 @@
-import { useCards } from "../../contexts/cards";
 import { TActions } from "../../schemas/actions";
 import { ActionsContainer, FaPlus } from "./styles";
 
@@ -8,8 +7,6 @@ type ActionsProps = {
 }
 
 export default function Actions({ actions, findBy }: ActionsProps) {
-
-    const { cards, setCards } = useCards()
 
     return <ActionsContainer>
         <input type="text" name="filter" placeholder={`Filter ${findBy}`} />

@@ -40,6 +40,21 @@ export const BoardsArea = styled.div`
         background-color: #fff;
         border: 1px solid #000
     }
+
+    @media(max-width: 610px) {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        overflow-y: auto;
+        &::-webkit-scrollbar{
+            height: 1px;
+        }
+        &::-webkit-scrollbar-track{
+            padding: 0;
+        }
+        &::-webkit-scrollbar-thumb{
+            border-radius: 5px;
+        }
+    }
 `
 
 export const Board = styled.div`
@@ -69,6 +84,17 @@ export const Board = styled.div`
     }
     &:nth-child(3){
         margin-top: 0;
+    }
+    @media(max-width: 610px) {
+        width: 95%;
+        margin-right: 10px;
+        min-height: 100px;
+        :nth-child(n){
+            margin-top: 10px;
+        }
+        :nth-child(1){
+            margin-top: 0;
+        }
     }
 `
 

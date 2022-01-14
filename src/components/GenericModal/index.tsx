@@ -24,6 +24,7 @@ export default function GenericModal(
     return <BoardModal
         isOpen={isModalOpened}
         onRequestClose={handleModal}
+        ariaHideApp={false}
         style={{
             overlay: {
                 border: '5px solid #fff',

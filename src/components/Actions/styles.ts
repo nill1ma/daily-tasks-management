@@ -24,6 +24,15 @@ export const ActionsContainer = styled.div`
             margin-left: 10px;
         }
     }
+
+    @media(max-width: 610px) {
+        flex-direction: column;
+        align-items: flex-start;
+            .add{
+                margin: 0;
+                margin-top: 10px;
+            }
+        }
 `
 
 export const FaPlus = styled(FontAwesomeIcon)`
