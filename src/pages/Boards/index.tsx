@@ -1,14 +1,15 @@
-import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-import Actions from "../../components/Actions";
 import { GenericModal } from "../../components/GenericModal";
 import { useBoards } from "../../contexts/boards";
 import { addItemInLocalStorage, getLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
 import { TActions } from "../../schemas/actions";
 import { IBoard } from "../../schemas/board";
-import { Board, BoardsArea, BoardsContainer, Header } from "./styles";
+import { BoardsArea, BoardsContainer, Header } from "./styles";
+import Actions from "../../components/Actions";
+import Board from "../../components/Board";
 
 export default function Boards() {
     const { boards, setBoards } = useBoards()
@@ -62,8 +63,8 @@ export default function Boards() {
             </div>
         </Header>
         <BoardsArea>
-            {boards.map(({ id, name }: IBoard) =>
-                <Board key={id} onClick={() => chooseBoard(id)}>{name}</Board>
+            {boards.map((board: IBoard) =>
+                <Board key={board.id} project={board} chooseBoard={chooseBoard} removeBoard={removeBoard} />
             )}
         </BoardsArea>
     </BoardsContainer>

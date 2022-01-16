@@ -57,48 +57,6 @@ export const BoardsArea = styled.div`
         }
     }
 `
-
-export const Board = styled.div`
-    text-decoration:none;
-    color:#fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 31%;
-    height: 150px;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-left: 10px;
-    &:hover{
-        color: green;
-        border-color: green;
-    }
-    &:nth-child(n){
-        margin-top: 10px;
-    }
-    &:nth-child(1){
-        margin-top: 0;
-    }
-    &:nth-child(2){
-        margin-top: 0;
-    }
-    &:nth-child(3){
-        margin-top: 0;
-    }
-    @media(max-width: 610px) {
-        width: 95%;
-        margin-right: 10px;
-        min-height: 100px;
-        :nth-child(n){
-            margin-top: 10px;
-        }
-        :nth-child(1){
-            margin-top: 0;
-        }
-    }
-`
-
 export const BoardModal = styled(Modal)`
     input{
         background-color: #161b22;

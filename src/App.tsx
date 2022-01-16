@@ -5,7 +5,7 @@ import Header from './components/Header';
 import BoardsProvider from './contexts/boards';
 import CardsProvider from './contexts/cards';
 import Columnsrovider from './contexts/columns';
-import Board from './pages/Board';
+import BoardPage from './pages/BoardPage';
 import Boards from './pages/Boards';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
             <CardsProvider>
               <Routes>
                 <Route path={'/'} element={<Boards />} />
-                <Route path={'/project/:id'} element={<Board />} />
+                <Route path={'/project/:id'} element={<BoardPage />} />
               </Routes>
             </CardsProvider>
           </Columnsrovider>

@@ -30,16 +30,30 @@ function removeItemFromLocalStorage<T>(key: string, itemId: string): T[] {
     const storage = storageJsonParse(key)
     const updatedStorage = storage.filter((item: TGenericStorage) => item.id !== itemId)
     localStorage.setItem(key, JSON.stringify([...updatedStorage]))
-    if('columns' === key) removeCardsByColumnId(itemId)
+    'boards' === key && removeColumnsByBoardId(itemId)
+    'columns' === key && removeCardsByColumnId([itemId])
     return getLocalStorage(key)
 }
 
-function removeCardsByColumnId(columnId: string) {
+function removeColumnsByBoardId(boardId: string) {
+    const storage = storageJsonParse('columns')
+    const updatedStorage = storage.filter((item: ICoolumn) => item.boardId !== boardId)
+    const ids = updatedStorage.map((item: ICoolumn) => item.id)
+    removeCardsByColumnId(ids)
+    localStorage.setItem('columns', JSON.stringify([...updatedStorage]))
+    return getLocalStorage('columns')
+}
+
+function removeCardsByColumnId(columnId: string[]) {
     const storage = storageJsonParse('cards')
-    const updatedStorage = storage.filter((item: ICard) => item.columnId !== columnId)
+    var updatedStorage = []
+    if(columnId.length > 0){
+        updatedStorage = storage.filter((item: ICard) => !columnId.includes(item.columnId))
+    }
     localStorage.setItem('cards', JSON.stringify([...updatedStorage]))
     return getLocalStorage('cards')
 }
+
 
 const storageJsonParse = (key: string) => JSON.parse(localStorage.getItem(key)! || '[]')
 

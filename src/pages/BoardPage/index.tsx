@@ -13,7 +13,7 @@ import { ICard } from "../../schemas/card";
 import { ICoolumn } from "../../schemas/column";
 import { BoardContainer, ColumnsArea, Header } from "./styles";
 
-export default function Board() {
+export default function BoardPage() {
 
     const { boards } = useBoards()
     const { columns, setColumns } = useColumns()
