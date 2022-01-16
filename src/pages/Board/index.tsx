@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Actions from "../../components/Actions";
 import Column from "../../components/Column";
-import GenericModal from "../../components/GenericModal";
+import { GenericModal } from "../../components/GenericModal";
 import { useBoards } from "../../contexts/boards";
 import { useCards } from "../../contexts/cards";
 import { useColumns } from "../../contexts/columns";
-import { addItemInLocalStorage, getLocalStorage } from "../../helpers/storage";
+import { addItemInLocalStorage, getLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
 import { TActions } from "../../schemas/actions";
 import { ICard } from "../../schemas/card";
 import { ICoolumn } from "../../schemas/column";
@@ -44,6 +44,12 @@ export default function Board() {
         { labelOption: 'Add Column', handleModal: handleModal, icon: faPlus }
     ]
 
+    function filterByCards(filter: string) {
+        const storage = getLocalStorage('cards')
+        const filteredCards = storage.filter((card: ICard) => card.label.includes(filter))
+        setCards(filteredCards.length > 0 ? filteredCards : storage)
+    }
+
     const save = (key: string) => {
         const id = uuidv4()
         const value = { id, label, ...getRestColumnOrCardObject(key) }
@@ -52,7 +58,10 @@ export default function Board() {
     }
 
     const getRestColumnOrCardObject = (key: string) => 'columns' === key ? { boardId: boardSession.id } : { description: cardDescription, columnId: currentColumnId }
-
+    const removeColumn = (columnId: string) => {
+        const updatedeColumns = removeItemFromLocalStorage('columns', columnId)
+        setColumns([...updatedeColumns])
+    }
     return <BoardContainer>
         <GenericModal
             isModalOpened={isModalOpened}
@@ -63,7 +72,7 @@ export default function Board() {
             setDescription={setCardDescription}
         />
         <Header>
-            <Actions actions={actions} findBy="Card" />
+            <Actions actions={actions} filterAction={filterByCards} findBy="Card" />
             <div className="projetName">
                 <h3>{boardSession.name}</h3>
             </div>
@@ -74,7 +83,8 @@ export default function Board() {
                     <Column key={id}
                         columnId={id}
                         label={label}
-                        handleModal={handleModal} />
+                        handleModal={handleModal}
+                        removeColumn={removeColumn} />
                 )}
         </ColumnsArea>
     </BoardContainer>

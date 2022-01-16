@@ -29,8 +29,16 @@ function updateItemInLocalStorage<T>(key: string, storage: TGenericStorage[]): T
 function removeItemFromLocalStorage<T>(key: string, itemId: string): T[] {
     const storage = storageJsonParse(key)
     const updatedStorage = storage.filter((item: TGenericStorage) => item.id !== itemId)
-    localStorage.setItem(key, JSON.stringify([...JSON.parse(updatedStorage)]))
+    localStorage.setItem(key, JSON.stringify([...updatedStorage]))
+    if('columns' === key) removeCardsByColumnId(itemId)
     return getLocalStorage(key)
+}
+
+function removeCardsByColumnId(columnId: string) {
+    const storage = storageJsonParse('cards')
+    const updatedStorage = storage.filter((item: ICard) => item.columnId !== columnId)
+    localStorage.setItem('cards', JSON.stringify([...updatedStorage]))
+    return getLocalStorage('cards')
 }
 
 const storageJsonParse = (key: string) => JSON.parse(localStorage.getItem(key)! || '[]')

@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 
 export const BoardContainer = styled.div`
     width: 100vw;
-    height: 90vh;
     display: flex;
     flex-direction: column;
     background-color: #161b22;
@@ -25,8 +24,9 @@ export const Header = styled.header`
 export const ColumnsArea = styled.div`
     width: 100%;
     display: flex;
+    min-height: 70vh;
+    max-height: 70vh;
     overflow-x:auto;
-    /* margin-left: 10px; */
     &::-webkit-scrollbar{
         height: 10px;
     }

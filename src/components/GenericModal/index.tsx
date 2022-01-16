@@ -1,4 +1,6 @@
-import { BoardModal, SaveButton } from "./styles";
+import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
+import { memo, useCallback } from "react";
+import { StyledModal, CloseButton, SaveButton } from "./styles";
 
 type GenericModalProps = {
     isModalOpened: boolean
@@ -10,7 +12,7 @@ type GenericModalProps = {
     idColumn?: string
 }
 
-export default function GenericModal(
+function GModal(
     {
         isModalOpened,
         handleModal,
@@ -21,7 +23,7 @@ export default function GenericModal(
         idColumn
     }
         : GenericModalProps) {
-    return <BoardModal
+    return <StyledModal
         isOpen={isModalOpened}
         onRequestClose={handleModal}
         ariaHideApp={false}
@@ -51,10 +53,16 @@ export default function GenericModal(
                 color: '#fff',
                 height: '50vh',
             }
-        }}
-    >
-        <input type={'text'} onChange={(e) => setLabelOf(e.target.value)} />
-        {('cards' === storageKey && setDescription) && <textarea onChange={(e) => setDescription(e.target.value)} />}
-        <SaveButton onClick={() => save(storageKey)}>Save</SaveButton>
-    </BoardModal>
+        }}>
+        <div className="header">
+            <CloseButton onClick={useCallback(() => handleModal(), [handleModal])} size={'2x'} icon={faWindowClose} />
+        </div>
+        <div className="field">
+            <input type={'text'} onChange={(e) => setLabelOf(e.target.value)} />
+            {('cards' === storageKey && setDescription) && <textarea onChange={(e) => setDescription(e.target.value)} />}
+            <SaveButton onClick={() => save(storageKey)}>Save</SaveButton>
+        </div>
+    </StyledModal>
 }
+
+export const GenericModal = memo(GModal)

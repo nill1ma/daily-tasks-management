@@ -4,8 +4,7 @@ import { HeaderContainer, Item } from "./styles";
 export default function Header() {
 
     const [tabs, setTabs] = useState([
-        { id: '1', label: 'Boards', active: false, to: "/" },
-        // { id: '2', label: 'Board', active: false, to: "/project/1" }
+        { id: '1', label: 'DTM', active: true, to: "/" }
     ])
 
     const handleTabs = (id: string) => {
@@ -21,9 +20,9 @@ export default function Header() {
     }
 
     return <HeaderContainer>
-        {tabs.map(tab => {
-            return <Item onClick={() => handleTabs(tab.id)} active={tab.active} to={tab.to}>
-                {tab.label}
+        {tabs.map(({ id, active, to, label }) => {
+            return <Item key={id} onClick={() => handleTabs(id)} active={active} to={to}>
+                {label}
             </Item>
         })}
     </HeaderContainer>

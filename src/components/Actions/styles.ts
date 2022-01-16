@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { memo } from "react";
 import styled from "styled-components";
 
 export const ActionsContainer = styled.div`
@@ -35,7 +36,8 @@ export const ActionsContainer = styled.div`
         }
 `
 
-export const FaPlus = styled(FontAwesomeIcon)`
+const F = styled(FontAwesomeIcon)`
     margin-left: 5px;
     width: 1000px;
 `
+export const FaPlus = memo(F)

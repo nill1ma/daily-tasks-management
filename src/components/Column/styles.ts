@@ -6,7 +6,8 @@ export const ColumnContainer = styled.div`
     display: flex;
     flex-direction: column;
     border: 1px solid;
-    min-height: 65vh;
+    min-height: 80%;
+    max-height: 100%;
     min-width: 355px;
     max-width: 355px;
     background-color: #0d1117;
@@ -50,6 +51,10 @@ export const ColumnHeader = styled.div`
                 margin-left: 5px;
             }
         }
+        &:nth-child(2){
+            width: 10%;
+            justify-content: space-between;
+        }
     }
 `
 
@@ -81,6 +86,6 @@ export const ColumnsdModal = styled(Modal)`
         font-size: 22px;
     }
 `
-export const FaPlus = styled(FontAwesomeIcon)`
+export const Icon = styled(FontAwesomeIcon)`
     cursor: pointer;
 `

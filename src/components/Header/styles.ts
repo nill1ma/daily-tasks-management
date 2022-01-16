@@ -5,9 +5,10 @@ type ItemProps = {
     active: boolean
 }
 
-export const HeaderContainer = styled.aside`
+export const HeaderContainer = styled.header`
     width: 100vw;
-    height: 10vh;
+    min-height: 10vh;
+    max-height: 10vh;
     display: flex;
     align-items: center;
     background-color: #161b22;

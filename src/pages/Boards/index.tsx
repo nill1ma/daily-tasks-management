@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import Actions from "../../components/Actions";
-import GenericModal from "../../components/GenericModal";
+import { GenericModal } from "../../components/GenericModal";
 import { useBoards } from "../../contexts/boards";
-import { addItemInLocalStorage } from "../../helpers/storage";
+import { addItemInLocalStorage, getLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
 import { TActions } from "../../schemas/actions";
 import { IBoard } from "../../schemas/board";
 import { Board, BoardsArea, BoardsContainer, Header } from "./styles";
@@ -37,6 +37,16 @@ export default function Boards() {
         setBoards([...storage])
     }
 
+    function filterByBoards(filter: string) {
+        const storage = getLocalStorage('boards')
+        const filteredBoards = storage.filter((board: IBoard) => board.name.includes(filter))
+        setBoards(filteredBoards.length > 0 ? filteredBoards : storage)
+    }
+    const removeBoard = (boardId: string) => {
+        const updatedeBoards = removeItemFromLocalStorage('boards', boardId)
+        setBoards([...updatedeBoards])
+    }
+
     return <BoardsContainer>
         <GenericModal
             isModalOpened={isModalOpened}
@@ -46,14 +56,14 @@ export default function Boards() {
             storageKey={'boards'}
         />
         <Header>
-            <Actions actions={actions} findBy="Card" />
+            <Actions actions={actions} filterAction={filterByBoards} findBy="Card" />
             <div className="projetName">
                 <h3>Here are all of your boards</h3>
             </div>
         </Header>
         <BoardsArea>
             {boards.map(({ id, name }: IBoard) =>
-                <Board onClick={() => chooseBoard(id)}>{name}</Board>
+                <Board key={id} onClick={() => chooseBoard(id)}>{name}</Board>
             )}
         </BoardsArea>
     </BoardsContainer>
