@@ -9,7 +9,7 @@ import { useCards } from "../../contexts/cards";
 import { useColumns } from "../../contexts/columns";
 import { addItemInLocalStorage, getLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
 import { TActions } from "../../schemas/actions";
-import { ICard } from "../../schemas/card";
+import { CardPriority, ICard, mountPriotity } from "../../schemas/card";
 import { ICoolumn } from "../../schemas/column";
 import { BoardContainer, ColumnsArea, Header } from "./styles";
 
@@ -20,7 +20,8 @@ export default function BoardPage() {
     const { setCards } = useCards()
     const [isModalOpened, setIsModalOpened] = useState(false)
     const [label, setLabel] = useState('')
-    const [cardDescription, setCardDescription] = useState('')
+    const [description, seDescription] = useState('')
+    const [cardAPriority, setCardAPriority] = useState<CardPriority>({} as CardPriority)
     const [boardSession, setBoardSession] = useState({ id: '', name: '' })
     const [currentColumnId, setCurrentColumnId] = useState('')
     const [storageKey, setStorageKey] = useState('')
@@ -57,11 +58,16 @@ export default function BoardPage() {
         'columns' === key ? setColumns([...storage]) : setCards([...storage])
     }
 
-    const getRestColumnOrCardObject = (key: string) => 'columns' === key ? { boardId: boardSession.id } : { description: cardDescription, columnId: currentColumnId }
+    const getRestColumnOrCardObject = (key: string) => 'columns' === key ? { boardId: boardSession.id } : { description, priority: cardAPriority, columnId: currentColumnId }
     const removeColumn = (columnId: string) => {
         const updatedeColumns = removeItemFromLocalStorage('columns', columnId)
         setColumns([...updatedeColumns])
     }
+    const handleCardAPriority = (e: any) => {
+        const { value } = e.target
+        setCardAPriority!(mountPriotity(value))
+    }
+
     return <BoardContainer>
         <GenericModal
             isModalOpened={isModalOpened}
@@ -69,7 +75,8 @@ export default function BoardPage() {
             setLabelOf={setLabel}
             save={save}
             storageKey={storageKey}
-            setDescription={setCardDescription}
+            seDescription={seDescription}
+            handleCardAPriority={handleCardAPriority}
         />
         <Header>
             <Actions actions={actions} filterAction={filterByCards} findBy="Card" />

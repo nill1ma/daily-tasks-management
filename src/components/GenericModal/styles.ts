@@ -24,16 +24,33 @@ export const StyledModal = styled(Modal)`
             background-color: #161b22;
             color: #fff;
             border:solid #fff;
-            padding: 5px 10px;
-            width: 60%;
             border-radius: 5px;
             font-size: 22px;
             width: 80%;
         }
+
+        input{
+            padding: 3% 10%;
+        }
+
+        .priority{
+            padding:10px 10px 5px 0;
+            display: flex;
+            justify-content: space-between;
+            select{
+                background-color: #161b22;
+                color: #fff;
+                border: 1px solid white;
+                padding: 5px;
+                outline: none;
+            }
+            
+        }
     
         textarea{
             height: 30%;
-            margin-top: 10px;
+            padding: 5% 10%;
+            margin-top: 5px;
             &::-webkit-scrollbar{
             width: 10px;
         }
@@ -55,7 +72,7 @@ export const StyledModal = styled(Modal)`
 export const SaveButton = styled.button`
     padding: 10px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 10px 0;
     background-color: #0ff;
     border:none;
     font-weight: bold;

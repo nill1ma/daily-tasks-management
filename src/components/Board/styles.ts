@@ -20,8 +20,9 @@ export const Board = styled.div`
         height:80% ;
     }
     &:hover{
-        color: #00CED1;
-        border-color: #00CED1;
+        color: #D3D3D3;
+        border-color: #D3D3D3;
+        font-weight: bold;
     }
     &:nth-child(n){
         margin-top: 10px;
@@ -56,9 +57,8 @@ export const BoardHeader = styled.div`
     padding-right: 2%;
     border-bottom: 1px solid #fff;
     height:18%;
-    &:hover{
-        border-color: #00CED1;
-    }
+    border-radius: 10px 10px 0 0;
+    
 `
 export const Icon = styled(FontAwesomeIcon)`
     cursor: pointer;

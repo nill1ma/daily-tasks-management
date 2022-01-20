@@ -62,9 +62,9 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
             </div>
         </ColumnHeader>
         <CardsArea>
-            {(cards && cards.length > 0) && cards.map(({ id, columnId: cardColumnId, label, description }: ICard) => {
+            {(cards && cards.length > 0) && cards.map(({ id, columnId: cardColumnId, label, description, priority }: ICard) => {
                 return cardColumnId === columnId &&
-                    <Card key={id} columnId={columnId} label={label} description={description} id={id} />;
+                    <Card key={id} columnId={columnId} label={label} description={description} priority={priority} id={id} />
             })}
         </CardsArea>
     </ColumnContainer>
