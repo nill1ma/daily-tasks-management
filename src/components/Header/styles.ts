@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-type ItemProps = {
-    active: boolean
-}
-
 export const HeaderContainer = styled.header`
     width: 100vw;
     min-height: 10vh;
@@ -16,10 +12,10 @@ export const HeaderContainer = styled.header`
 `
 
 
-export const Item = styled(Link)<ItemProps>`
+export const Item = styled(Link)`
     display: flex;
-    background-color: ${({active})=> active ? `#fff` : `#161b22`};
-    color: ${({active})=> active ? `#161b22` : `#fff`};
+    background-color: #fff;
+    color: #161b22;
     font-weight:bold;
     text-decoration: none;
     cursor: pointer;

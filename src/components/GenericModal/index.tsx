@@ -66,7 +66,6 @@ function GModal(
             {('cards' === storageKey && handleCardAPriority) && (
                 <>
                     <div className="priority">
-                        {/* <label htmlFor="priority">Priority:</label> */}
                         <select name="priority" id="priority"
                             onChange={(e: any) => handleCardAPriority(e)}>
                             {Object.values(PriorityReferences).map(priority => {

@@ -20,7 +20,7 @@ export interface CardPriority{
 }
 
 export enum PriorityReferences {
-    HIGHT_0 = 'HIGHT_0',
+    HIGH_0 = 'HIGH_0',
     MEDIUM_1 = 'MEDIUM_1',
     LOW_2 = 'LOW_2'
 }

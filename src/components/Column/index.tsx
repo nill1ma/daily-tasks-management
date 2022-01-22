@@ -14,31 +14,32 @@ type ColumnProps = {
 }
 
 export default function Column({ label, columnId, handleModal, removeColumn }: ColumnProps) {
-    const [cardsLength, setCardsLength] = useState<number>(0)
 
     const { cards, setCards } = useCards()
+    const [columnCards, setColumnsCards] = useState<ICard[]>([] as ICard[])
 
-    const getCardsLength = useCallback(() => {
+    const getColumnCards = useCallback(() => {
         if (cards && cards.length > 0) {
-            const { length } = cards.filter((card: ICard) => card.columnId === columnId)
-            setCardsLength(length)
+            const filteredCards = cards.filter((card: ICard) => card.columnId === columnId)
+            setColumnsCards(filteredCards.sort((a: ICard, b: ICard) => a.priority.code - b.priority.code))
         }
     }, [cards, columnId])
 
     useEffect(() => {
-        getCardsLength()
-    }, [getCardsLength])
+        getColumnCards()
+    }, [getColumnCards])
 
-    const drop = (e: DragEvent) => {
+    const drop = (e: DragEvent | any) => {
         e.preventDefault()
         const cardId = e.dataTransfer.getData('cardId')
         updateCardsDroped(cardId)
     }
 
-    const updateCardsDroped = (cardId: string) => {
-        var updatedCards = cards.map((card: ICard) => {
-            if (card.id === cardId)
+    const updateCardsDroped = (cardId: string, priority?:any) => {
+        var updatedCards = cards.map((card: ICard, index: number) => {
+            if (card.id === cardId && card.columnId !== columnId) {
                 card.columnId = columnId
+            }
             return card
         })
         setCards(updatedCards)
@@ -49,11 +50,10 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
         e.preventDefault()
     }
 
-
-    return <ColumnContainer onDrop={drop} onDragOver={dragOver} id={columnId}>
+    return <ColumnContainer className="columnContainer" onDrop={drop} onDragOver={dragOver} id={columnId}>
         <ColumnHeader>
             <div>
-                <span>{cardsLength}</span>
+                <span>{columnCards.length}</span>
                 <span>{label}</span>
             </div>
             <div>
@@ -62,7 +62,7 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
             </div>
         </ColumnHeader>
         <CardsArea>
-            {(cards && cards.length > 0) && cards.map(({ id, columnId: cardColumnId, label, description, priority }: ICard) => {
+            {columnCards.map(({ id, columnId: cardColumnId, label, description, priority }: ICard, index: number) => {
                 return cardColumnId === columnId &&
                     <Card key={id} columnId={columnId} label={label} description={description} priority={priority} id={id} />
             })}
