@@ -1,4 +1,5 @@
 export interface ICard {
+    [key: string]: any,
     id: string
     label: string
     columnId: string
