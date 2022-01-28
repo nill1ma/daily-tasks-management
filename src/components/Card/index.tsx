@@ -3,7 +3,7 @@ import { DragEvent, useCallback, useState } from "react";
 import { useCards } from "../../contexts/cards";
 import { updateItemInLocalStorage } from "../../helpers/storage";
 import { ICard, mountPriotity, PriorityReferences } from "../../schemas/card";
-import { CardContainer, ChoosePriority, Description, Footer, Icon, SOption, Title } from "./styles";
+import { CardContainer, ChoosePriority, Description, DescriptionTextArea, Footer, Icon, SOption, Title } from "./styles";
 
 type CardProps = {
     card: ICard
@@ -82,7 +82,9 @@ export default function Card({
                 <Icon onClick={() => setGetHiden((prev: boolean) => !prev)} icon={getHiden ? faExpandAlt : faCompressAlt} />
             </div>
         </Title>
-        <Description disabled={editDisabled !== id} onChange={(e: any) => fillCardContent(e, id)} name="description">{description}</Description>
+        {editDisabled === id ? 
+            <DescriptionTextArea getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardContent(e, id)} name="description">{description}</DescriptionTextArea>
+        : <Description getHiden={getHiden}>{description}</Description>}
         <Footer code={code}>
             <div>
                 <ChoosePriority code={code}>

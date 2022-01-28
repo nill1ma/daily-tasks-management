@@ -57,15 +57,15 @@ export default function Boards() {
             storageKey={'boards'}
         />
         <Header>
-            <Actions actions={actions} filterAction={filterByBoards} findBy="Card" />
+            <Actions actions={actions} filterAction={filterByBoards} findBy="Board" />
             <div className="projetName">
                 <h3>Here are all of your boards</h3>
             </div>
         </Header>
         <BoardsArea>
-            {boards.map((board: IBoard) =>
+            {(boards&&boards.length > 0) ? boards.map((board: IBoard) =>
                 <Board key={board.id} project={board} chooseBoard={chooseBoard} removeBoard={removeBoard} />
-            )}
+            ) : <span>There is still not boards</span>}
         </BoardsArea>
     </BoardsContainer>
 }

@@ -41,11 +41,11 @@ export const Title = styled.div`
 export const Icon = styled(FontAwesomeIcon)`
     cursor: pointer;
 `
-export const Description = styled.textarea`
-    min-width: 80%;
+export const DescriptionTextArea = styled.textarea<CardDescription>`
+    min-width: 90%;
     max-width: 80%;
-    min-height: 10px;
-    max-height: 50px;
+    height: 200px;
+    display: ${({ getHiden }) => getHiden ? 'none' : 'block'};
     flex-wrap: wrap;
     padding: 0 5px 5px 5px;
     text-align: left;
@@ -69,6 +69,36 @@ export const Description = styled.textarea`
         border: 1px solid #000
     }
 `
+
+export const Description = styled.div<CardDescription>`
+    width: 100%;
+    height: auto;
+    display: ${({ getHiden }) => getHiden ? 'none' : 'block'};
+    flex-wrap: wrap;
+    padding: 0 5px 5px 5px;
+    text-align: left;
+    border: none;
+    outline: none;
+    background-color: #161b22;
+    color:#fff;
+    overflow-y:auto;
+    &::-webkit-scrollbar{
+        width: 10px;
+    }
+    &::-webkit-scrollbar-track{
+        border: 1px solid #000;
+        padding: 5px;
+        background-color: #737272;
+    }
+    &::-webkit-scrollbar-thumb{
+        border-radius: 5px;
+        box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #fff;
+        border: 1px solid #000
+    }
+`
+
+
 export const Footer = styled.footer<CardPriority>`
     width: 98%;
     display: flex;
