@@ -5,11 +5,11 @@ import { ICoolumn } from "../schemas/column"
 type TGenericStorage = IBoard | ICard | ICoolumn
 
 function getLocalStorage(key: string) {
-    return storageJsonParse(key)
+    return JSON.parse(localStorage.getItem(key)! || '[]')
 }
 
 function addItemInLocalStorage<T>(key: string, value: TGenericStorage): T[] {
-    const storage = storageJsonParse(key)
+    const storage = getLocalStorage(key)
     switch (key) {
         case 'currentBoard':
             localStorage.setItem(key, JSON.stringify({ ...value }))
@@ -27,7 +27,7 @@ function updateItemInLocalStorage<T>(key: string, storage: TGenericStorage[]): T
 }
 
 function removeItemFromLocalStorage<T>(key: string, itemId: string): T[] {
-    const storage = storageJsonParse(key)
+    const storage = getLocalStorage(key)
     const updatedStorage = storage.filter((item: TGenericStorage) => item.id !== itemId)
     localStorage.setItem(key, JSON.stringify([...updatedStorage]))
     'boards' === key && removeColumnsByBoardId(itemId)
@@ -36,26 +36,22 @@ function removeItemFromLocalStorage<T>(key: string, itemId: string): T[] {
 }
 
 function removeColumnsByBoardId(boardId: string) {
-    const storage = storageJsonParse('columns')
+    const storage = getLocalStorage('columns')
     const updatedStorage = storage.filter((item: ICoolumn) => item.boardId !== boardId)
     const ids = updatedStorage.map((item: ICoolumn) => item.id)
-    removeCardsByColumnId(ids)
+    removeCardsByColumnId([...ids])
     localStorage.setItem('columns', JSON.stringify([...updatedStorage]))
     return getLocalStorage('columns')
 }
 
-function removeCardsByColumnId(columnId: string[]) {
-    const storage = storageJsonParse('cards')
-    var updatedStorage = []
-    if(columnId.length > 0){
-        updatedStorage = storage.filter((item: ICard) => !columnId.includes(item.columnId))
+function removeCardsByColumnId(columnsIds: string[]) {
+    const storage = getLocalStorage('cards')
+    var updatedStorage:ICard[] = []
+    if(columnsIds.length > 0){
+        updatedStorage = storage.filter((item: ICard) => !columnsIds.includes(item.columnId))
     }
     localStorage.setItem('cards', JSON.stringify([...updatedStorage]))
-    return getLocalStorage('cards')
 }
-
-
-const storageJsonParse = (key: string) => JSON.parse(localStorage.getItem(key)! || '[]')
 
 export {
     getLocalStorage,

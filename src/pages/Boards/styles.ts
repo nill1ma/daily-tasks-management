@@ -27,6 +27,12 @@ export const BoardsArea = styled.div`
     max-height: 70vh;
     overflow-y:auto;
     flex-wrap: wrap; 
+    span {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        font-size: 2em;
+    }
     &::-webkit-scrollbar{
         height: 10px;
     }
