@@ -56,6 +56,7 @@ export default function BoardPage() {
         const value = { id, label, ...getRestColumnOrCardObject(key) }
         const storage = addItemInLocalStorage<ICard | ICoolumn>(key, value)
         'columns' === key ? setColumns([...storage]) : setCards([...storage])
+        setIsModalOpened(prev => !prev)
     }
 
     const getRestColumnOrCardObject = (key: string) => 'columns' === key ? { boardId: boardSession.id } : { description, priority: cardAPriority, columnId: currentColumnId }
@@ -70,6 +71,7 @@ export default function BoardPage() {
 
     return <BoardContainer>
         <GenericModal
+            label={`Add a new Column`}
             isModalOpened={isModalOpened}
             handleModal={handleModal}
             setLabelOf={setLabel}
@@ -85,7 +87,7 @@ export default function BoardPage() {
             </div>
         </Header>
         <ColumnsArea>
-            {columns.filter(({ boardId }: ICoolumn) => boardId === boardSession.id)
+            {(columns && columns.length > 0) &&columns.filter(({ boardId }: ICoolumn) => boardId === boardSession.id)
                 .map(({ id, label }: ICoolumn) =>
                     <Column key={id}
                         columnId={id}

@@ -36,6 +36,7 @@ export default function Boards() {
         const value = { id: uuidv4(), name: boardName, active: false }
         const storage = addItemInLocalStorage<IBoard>(key, value)
         setBoards([...storage])
+        setIsModalOpened(prev => !prev)
     }
 
     function filterByBoards(filter: string) {
@@ -50,6 +51,7 @@ export default function Boards() {
 
     return <BoardsContainer>
         <GenericModal
+            label={`Add a new Board`}
             isModalOpened={isModalOpened}
             handleModal={handleModal}
             setLabelOf={setBoardName}

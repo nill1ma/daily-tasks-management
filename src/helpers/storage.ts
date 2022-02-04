@@ -4,9 +4,7 @@ import { ICoolumn } from "../schemas/column"
 
 type TGenericStorage = IBoard | ICard | ICoolumn
 
-function getLocalStorage(key: string) {
-    return JSON.parse(localStorage.getItem(key)! || '[]')
-}
+const getLocalStorage = (key: string) => JSON.parse(localStorage.getItem(key) || '[]')
 
 function addItemInLocalStorage<T>(key: string, value: TGenericStorage): T[] {
     const storage = getLocalStorage(key)

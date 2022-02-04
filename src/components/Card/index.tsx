@@ -1,5 +1,5 @@
 import { faCompressAlt, faEdit, faExpandAlt, faSave, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { DragEvent, useCallback, useState } from "react";
+import { ChangeEvent, DragEvent, useCallback, useState } from "react";
 import { useCards } from "../../contexts/cards";
 import { updateItemInLocalStorage } from "../../helpers/storage";
 import { ICard, mountPriotity, PriorityReferences } from "../../schemas/card";
@@ -38,9 +38,8 @@ export default function Card({
         target.classList.remove('cardDragging')
     }
 
-    const fillCardContent = (e: any, cardId: string) => {
+    const fillCardContent = (e: React.ChangeEvent<HTMLInputElement>, cardId: string) => {
         const { target: { name, value } } = e
-        console.log(value, 'select value')
         setCards((previous: ICard[]) => {
             return [...previous.map((prev: ICard) => {
                 if ('priority' === name && prev.id === cardId)
@@ -71,27 +70,28 @@ export default function Card({
         <Title>
             <input name="label"
                 value={label}
+                data-testid='title'
                 onChange={(e: any) => fillCardContent(e, id)}
                 disabled={editDisabled !== id}
                 type={'text'} />
             <div className="icons">
                 {editDisabled === id ?
-                    <Icon onClick={() => save()} icon={faSave} />
-                    : <Icon onClick={() => activeEditable(id)} icon={faEdit} />
+                    <Icon data-testid='saveEdition' onClick={() => save()} icon={faSave} />
+                    : <Icon data-testid='activeEditable' onClick={() => activeEditable(id)} icon={faEdit} />
                 }
-                <Icon onClick={() => setGetHiden((prev: boolean) => !prev)} icon={getHiden ? faExpandAlt : faCompressAlt} />
+                <Icon data-testid='descriptionShowedOrHidenButton' onClick={() => setGetHiden((prev: boolean) => !prev)} icon={getHiden ? faExpandAlt : faCompressAlt} />
             </div>
         </Title>
         {editDisabled === id ? 
-            <DescriptionTextArea getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardContent(e, id)} name="description">{description}</DescriptionTextArea>
-        : <Description getHiden={getHiden}>{description}</Description>}
+            <DescriptionTextArea data-testid='descriptionTextArea' getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardContent(e, id)} name="description" defaultValue={description} />
+        : <Description data-testid='description' getHiden={getHiden}>{description}</Description>}
         <Footer code={code}>
             <div>
                 <ChoosePriority code={code}>
-                    <select disabled={editDisabled !== id} name="priority" onChange={(e) => fillCardContent(e, id)}>
+                    <select disabled={editDisabled !== id} name="priority" onChange={(e: any) => fillCardContent(e, id)}>
                         {Object.keys(PriorityReferences).map((priority) => {
                             const { code: codePriority, description } = mountPriotity(priority)
-                            return <SOption selected={codePriority === code} code={codePriority} value={priority}>{description}</SOption>
+                            return <SOption key={codePriority} selected={codePriority === code} code={codePriority} value={priority}>{description}</SOption>
                         })}
                     </select>
                 </ChoosePriority>

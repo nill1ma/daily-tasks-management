@@ -64,33 +64,9 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
     }
 
     const dragOver = (e: any) => {
-        // const containers = document.querySelectorAll('.columnContainer')
-        // containers.forEach(container => {
         e.preventDefault()
-        //     const afterElement = getDragAfterElement(container, e.clientY)
-        //     const draggable = document.querySelector('.cardDragging')!
-        //     console.log('afterElement', afterElement)
-        //     if (container.id === columnId) {
-        //         afterElement == null ?
-        //             container.appendChild(draggable)
-        //             : container.insertBefore(draggable, afterElement)
-        //     }
-        // })
     }
-
-    const getDragAfterElement = (container: any, y: any) => {
-        const draggableElements = [...container.querySelectorAll('.cardDragble:not(.cardDragging)')]
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect()
-            const offset = y - box.top - box.height / 2
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child }
-            }
-            return closest
-        }, { offset: Number.NEGATIVE_INFINITY }).element
-    }
-
-
+    
     return <ColumnContainer onDragOver={dragOver} onDrop={drop}>
         <ColumnHeader>
             <div>

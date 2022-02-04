@@ -12,6 +12,7 @@ type GenericModalProps = {
     storageKey: string
     handleCardAPriority?: (reference: string) => void
     idColumn?: string
+    label:string
 }
 
 function GModal(
@@ -23,7 +24,8 @@ function GModal(
         save,
         storageKey,
         handleCardAPriority,
-        idColumn
+        idColumn,
+        label
     }
         : GenericModalProps) {
 
@@ -62,6 +64,7 @@ function GModal(
             <CloseButton onClick={useCallback(() => handleModal(), [handleModal])} size={'2x'} icon={faWindowClose} />
         </div>
         <div className="field">
+            {label}
             <input type={'text'} onChange={(e) => setLabelOf(e.target.value)} />
             {('cards' === storageKey && handleCardAPriority) && (
                 <>
