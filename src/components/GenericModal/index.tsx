@@ -1,6 +1,6 @@
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { memo, useCallback } from "react";
-import { PriorityReferences } from "../../schemas/card";
+import { CardPriority, PriorityReferences } from "../../schemas/card";
 import { StyledModal, CloseButton, SaveButton } from "./styles";
 
 type GenericModalProps = {
@@ -12,7 +12,7 @@ type GenericModalProps = {
     storageKey: string
     handleCardAPriority?: (reference: string) => void
     idColumn?: string
-    label:string
+    label: string
 }
 
 function GModal(
@@ -71,8 +71,8 @@ function GModal(
                     <div className="priority">
                         <select name="priority" id="priority"
                             onChange={(e: any) => handleCardAPriority(e)}>
-                            {Object.values(PriorityReferences).map(priority => {
-                                return <option value={priority}>{priority.split('_')[0]}</option>
+                            {PriorityReferences.map(({ description, code }: CardPriority) => {
+                                return <option value={code}>{description}</option>
                             })}
                         </select>
 

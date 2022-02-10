@@ -10,6 +10,7 @@ import { IBoard } from "../../schemas/board";
 import { BoardsArea, BoardsContainer, Header } from "./styles";
 import Actions from "../../components/Actions";
 import Board from "../../components/Board";
+import { hasElementInArray } from "../../helpers/validations";
 
 export default function Boards() {
     const { boards, setBoards } = useBoards()
@@ -42,7 +43,7 @@ export default function Boards() {
     function filterByBoards(filter: string) {
         const storage = getLocalStorage('boards')
         const filteredBoards = storage.filter((board: IBoard) => board.name.includes(filter))
-        setBoards(filteredBoards.length > 0 ? filteredBoards : storage)
+        setBoards(hasElementInArray(filteredBoards) ? filteredBoards : storage)
     }
     const removeBoard = (boardId: string) => {
         const updatedeBoards = removeItemFromLocalStorage('boards', boardId)
@@ -61,11 +62,11 @@ export default function Boards() {
         <Header>
             <Actions actions={actions} filterAction={filterByBoards} findBy="Board" />
             <div className="projetName">
-            {(boards && boards.length > 0) && <h3>Here are all of your boards</h3>}
+                {(hasElementInArray(boards)) && <h3>Here are all of your boards</h3>}
             </div>
         </Header>
         <BoardsArea>
-            {(boards && boards.length > 0) ? boards.map((board: IBoard) =>
+            {(hasElementInArray(boards)) ? boards.map((board: IBoard) =>
                 <Board key={board.id} project={board} chooseBoard={chooseBoard} removeBoard={removeBoard} />
             ) : <span>There is still not boards!</span>}
         </BoardsArea>

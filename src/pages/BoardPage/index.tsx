@@ -8,8 +8,9 @@ import { useBoards } from "../../contexts/boards";
 import { useCards } from "../../contexts/cards";
 import { useColumns } from "../../contexts/columns";
 import { addItemInLocalStorage, getLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
+import { hasElementInArray } from "../../helpers/validations";
 import { TActions } from "../../schemas/actions";
-import { CardPriority, ICard, mountPriotity } from "../../schemas/card";
+import { CardPriority, ICard } from "../../schemas/card";
 import { ICoolumn } from "../../schemas/column";
 import { BoardContainer, ColumnsArea, Header } from "./styles";
 
@@ -48,7 +49,7 @@ export default function BoardPage() {
     function filterByCards(filter: string) {
         const storage = getLocalStorage('cards')
         const filteredCards = storage.filter((card: ICard) => card.label.includes(filter))
-        setCards(filteredCards.length > 0 ? filteredCards : storage)
+        setCards(hasElementInArray(filteredCards) ? filteredCards : storage)
     }
 
     const save = (key: string) => {
@@ -66,7 +67,7 @@ export default function BoardPage() {
     }
     const handleCardAPriority = (e: any) => {
         const { value } = e.target
-        setCardAPriority!(mountPriotity(value))
+        setCardAPriority!(JSON.parse(value))
     }
 
     return <BoardContainer>
@@ -87,7 +88,7 @@ export default function BoardPage() {
             </div>
         </Header>
         <ColumnsArea>
-            {(columns && columns.length > 0) &&columns.filter(({ boardId }: ICoolumn) => boardId === boardSession.id)
+            {(hasElementInArray(columns)) && columns.filter(({ boardId }: ICoolumn) => boardId === boardSession.id)
                 .map(({ id, label }: ICoolumn) =>
                     <Column key={id}
                         columnId={id}

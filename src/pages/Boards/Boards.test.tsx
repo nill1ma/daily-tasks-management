@@ -5,12 +5,12 @@ import Boards from './';
 
 describe(`Boards Component Page`, () => {
     it('Should return Boards component as defined', () => {
-        const component = render(
+        const utils = render(
             <BrowserRouter>
                 <Boards />
             </BrowserRouter>
         )
-        expect(component).toBeDefined()
+        expect(utils).toBeDefined()
     })
 
     it('Should check if there is a button to add a new Board',   () => {

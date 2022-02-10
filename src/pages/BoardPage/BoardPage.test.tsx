@@ -1,15 +1,14 @@
-import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { ICoolumn } from '../../schemas/column';
+import { fireEvent, render, screen } from '@testing-library/react';
 import BoardPage from './';
 
 
 describe(`Board Page Component Page`, () => {
     it('Should return Board Page component as defined', () => {
-        const component = render(
+        const utils = render(
             <BoardPage />
         )
-        expect(component).toBeDefined()
+        expect(utils).toBeDefined()
     })
 
     it('Should check if there is a button to add a new Board', () => {

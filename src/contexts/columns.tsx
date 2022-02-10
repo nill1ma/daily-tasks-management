@@ -14,7 +14,7 @@ type TColumnsState = {
 
 const ColumnsContext = createContext<ICoolumn[] | any>([{}] as ICoolumn[])
 
-export default function Columnsrovider({ children }: Props) {
+export default function ColumnsrPovider({ children }: Props) {
 
     const [columns, setColumns] = useState<TColumnsState[] | any>(initialState)
     return <ColumnsContext.Provider value={{ columns, setColumns }}>

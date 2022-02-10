@@ -1,8 +1,8 @@
 import { faCompressAlt, faEdit, faExpandAlt, faSave, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent, DragEvent, useCallback, useState } from "react";
+import { DragEvent, useCallback, useState } from "react";
 import { useCards } from "../../contexts/cards";
 import { updateItemInLocalStorage } from "../../helpers/storage";
-import { ICard, mountPriotity, PriorityReferences } from "../../schemas/card";
+import { CardPriority, ICard, PriorityReferences } from "../../schemas/card";
 import { CardContainer, ChoosePriority, Description, DescriptionTextArea, Footer, Icon, SOption, Title } from "./styles";
 
 type CardProps = {
@@ -15,7 +15,7 @@ export default function Card({
         id,
         label,
         description,
-        priority: { description: prioritydDescription, code }
+        priority: { description: prioritydDescription, code: codePriority }
     },
     removeCard
 }: CardProps) {
@@ -42,10 +42,8 @@ export default function Card({
         const { target: { name, value } } = e
         setCards((previous: ICard[]) => {
             return [...previous.map((prev: ICard) => {
-                if ('priority' === name && prev.id === cardId)
-                    prev[name] = mountPriotity(value)
-                else if (prev.id === cardId)
-                    prev[name] = value
+                if (prev.id === cardId)
+                    prev[name] = name === 'priority' ? JSON.parse(value) : value
                 return prev
             })]
         })
@@ -82,16 +80,15 @@ export default function Card({
                 <Icon data-testid='descriptionShowedOrHidenButton' onClick={() => setGetHiden((prev: boolean) => !prev)} icon={getHiden ? faExpandAlt : faCompressAlt} />
             </div>
         </Title>
-        {editDisabled === id ? 
+        {editDisabled === id ?
             <DescriptionTextArea data-testid='descriptionTextArea' getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardContent(e, id)} name="description" defaultValue={description} />
-        : <Description data-testid='description' getHiden={getHiden}>{description}</Description>}
-        <Footer code={code}>
+            : <Description data-testid='description' getHiden={getHiden}>{description}</Description>}
+        <Footer code={codePriority}>
             <div>
-                <ChoosePriority code={code}>
+                <ChoosePriority code={codePriority}>
                     <select disabled={editDisabled !== id} name="priority" onChange={(e: any) => fillCardContent(e, id)}>
-                        {Object.keys(PriorityReferences).map((priority) => {
-                            const { code: codePriority, description } = mountPriotity(priority)
-                            return <SOption key={codePriority} selected={codePriority === code} code={codePriority} value={priority}>{description}</SOption>
+                        {PriorityReferences.map(({ description, code }: CardPriority) => {
+                            return <SOption key={codePriority} selected={codePriority === code} code={codePriority} value={JSON.stringify({ description, code })}>{description}</SOption>
                         })}
                     </select>
                 </ChoosePriority>

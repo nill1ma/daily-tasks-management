@@ -14,7 +14,7 @@ export default function Projects({ chooseBoard, project: { id, name }, removeBoa
         <BoardHeader>
             <Icon onClick={useCallback(() => removeBoard(id), [id, removeBoard])} icon={faTrashAlt} />
         </BoardHeader>
-        <span onClick={() => chooseBoard(id)}>
+        <span data-testid='chooseBoard' onClick={() => chooseBoard(id)}>
             {name}
         </span>
     </Board>

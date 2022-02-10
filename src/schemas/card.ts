@@ -15,13 +15,13 @@ export const mountPriotity = (reference: string) => {
     }
 }
 
-export interface CardPriority{
-    description?: string
+export interface CardPriority {
+    description: string
     code: number
 }
 
-export enum PriorityReferences {
-    HIGH_0 = 'HIGH_0',
-    MEDIUM_1 = 'MEDIUM_1',
-    LOW_2 = 'LOW_2'
-}
+export const PriorityReferences: CardPriority[] = [
+    { description: 'HIGH', code: 0 },
+    { description: 'MEDIUM', code: 1 },
+    { description: 'LOW', code: 2 },
+]

@@ -6,6 +6,8 @@ type Editable = {
     isEditable: boolean
 }
 
+type CardPriorityProps = Omit<CardPriority, 'description'>
+
 export const CardContainer = styled.div<Editable>`
     display: flex;
     flex-direction: column;
@@ -99,7 +101,7 @@ export const Description = styled.div<CardDescription>`
 `
 
 
-export const Footer = styled.footer<CardPriority>`
+export const Footer = styled.footer<CardPriorityProps>`
     width: 98%;
     display: flex;
     justify-content: space-between;
@@ -116,7 +118,7 @@ export const Footer = styled.footer<CardPriority>`
         }
     }
 `
-export const ChoosePriority = styled.div<CardPriority>`
+export const ChoosePriority = styled.div<CardPriorityProps>`
     display: 'flex' !important;
     select{
         color: ${({ code }) => getColor(code)} !important;
@@ -130,7 +132,7 @@ export const ChoosePriority = styled.div<CardPriority>`
         cursor: pointer;
     }
 `
-export const SOption = styled.option<CardPriority>`
+export const SOption = styled.option<CardPriorityProps>`
     color: ${({ code }) => getColor(code)}
 `
 

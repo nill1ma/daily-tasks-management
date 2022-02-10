@@ -6,6 +6,7 @@ import { ICard } from "../../schemas/card";
 import { v4 as uuidv4 } from 'uuid';
 import { CardsArea, ColumnContainer, ColumnHeader, Icon } from "./styles";
 import Card from "../Card";
+import { hasElementInArray } from "../../helpers/validations";
 
 type ColumnProps = {
     columnId: string
@@ -20,7 +21,7 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
     const [columnCards, setColumnsCards] = useState<ICard[]>([] as ICard[])
 
     const getColumnCards = () => {
-        if (cards && cards.length > 0) {
+        if (hasElementInArray(cards)) {
             const filteredCards = cards.filter((card: ICard) => card.columnId === columnId)
             setColumnsCards(filteredCards.sort((a: ICard, b: ICard) => a.priority.code - b.priority.code))
         }
@@ -70,7 +71,7 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
     return <ColumnContainer onDragOver={dragOver} onDrop={drop}>
         <ColumnHeader>
             <div>
-                <span>{columnCards.length}</span>
+                <span data-testid='numberOfCardInCurrentColumn'>{columnCards.length}</span>
                 <span>{label}</span>
             </div>
             <div>
@@ -78,7 +79,7 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
                 <Icon onClick={useCallback(() => removeColumn(columnId), [removeColumn])} icon={faTrashAlt} />
             </div>
         </ColumnHeader>
-        <CardsArea id={columnId} onSelect={()=>{}} className="columnContainer">
+        <CardsArea id={columnId} className="columnContainer">
             {columnCards.map(({ id, columnId: cardColumnId, label, description, priority }: ICard) => {
                 return cardColumnId === columnId &&
                     <Card key={id} card={{ id, columnId: cardColumnId, label, description, priority }} removeCard={removeCard} />

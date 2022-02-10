@@ -18,11 +18,11 @@ export const Board = styled.div`
         display: flex;
         align-items: center;
         height:80% ;
-    }
-    &:hover{
-        color: #D3D3D3;
-        border-color: #D3D3D3;
-        font-weight: bold;
+        &:hover{
+            color: #D3D3D3;
+            border-color: #D3D3D3;
+            font-weight: bold;
+        }
     }
     &:nth-child(n){
         margin-top: 10px;

@@ -1,6 +1,7 @@
 import { IBoard } from "../schemas/board"
 import { ICard } from "../schemas/card"
 import { ICoolumn } from "../schemas/column"
+import { hasElementInArray } from "./validations"
 
 type TGenericStorage = IBoard | ICard | ICoolumn
 
@@ -45,7 +46,7 @@ function removeColumnsByBoardId(boardId: string) {
 function removeCardsByColumnId(columnsIds: string[]) {
     const storage = getLocalStorage('cards')
     var updatedStorage:ICard[] = []
-    if(columnsIds.length > 0){
+    if(hasElementInArray(columnsIds)){
         updatedStorage = storage.filter((item: ICard) => !columnsIds.includes(item.columnId))
     }
     localStorage.setItem('cards', JSON.stringify([...updatedStorage]))

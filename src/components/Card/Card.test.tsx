@@ -1,10 +1,13 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import React from 'react';
-import { ICard } from '../../schemas/card';
-import Card from './';
+import React from 'react'
+import userEvent from '@testing-library/user-event'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { ICard } from '../../schemas/card'
+import Card from './'
+import renderer from 'react-test-renderer'
+import "jest-styled-components"
+import { Description } from './styles'
 
-describe('Boards Component Page', () => {
+describe('Card Component', () => {
     it('Should return Card component as defined', () => {
         let card: ICard = {
             id: '',
@@ -14,10 +17,10 @@ describe('Boards Component Page', () => {
             priority: { description: '', code: 1 }
         }
         const removeCard = () => { }
-        const component = render(
+        const utils = render(
             <Card card={card} removeCard={removeCard} />
         )
-        expect(component).toBeDefined()
+        expect(utils).toBeDefined()
     })
     it('Should find Card description text in the document', () => {
         let card: ICard = {
@@ -44,10 +47,10 @@ describe('Boards Component Page', () => {
             priority: { description: 'HIGH', code: 0 }
         }
         const removeCard = () => { }
-        const { getByTestId } = render(
+        render(
             <Card card={card} removeCard={removeCard} />
         )
-        const cardDescription = getByTestId('description')
+        const cardDescription = screen.getByTestId('description')
 
         expect(cardDescription).toBeVisible()
     })
@@ -61,33 +64,14 @@ describe('Boards Component Page', () => {
             priority: { description: 'HIGH', code: 0 }
         }
         const removeCard = () => { }
-        const { getByTestId } = render(
+        render(
             <Card card={card} removeCard={removeCard} />
         )
         const descriptionShowedOrHidenButton = screen.getByTestId('descriptionShowedOrHidenButton')
         userEvent.click(descriptionShowedOrHidenButton)
         // userEvent
         // use role to check dialog
-        const cardDescription = getByTestId('description')
-
-        expect(cardDescription).not.toBeVisible()
-    })
-
-    it('Should find Card description area not visible', () => {
-        let card: ICard = {
-            id: '1',
-            columnId: '1',
-            label: 'Planning travell',
-            description: 'Planning all of the travell burocracies',
-            priority: { description: 'HIGH', code: 0 }
-        }
-        const removeCard = () => { }
-        const { getByTestId } = render(
-            <Card card={card} removeCard={removeCard} />
-        )
-        const descriptionShowedOrHidenButton = screen.getByTestId('descriptionShowedOrHidenButton')
-        fireEvent.click(descriptionShowedOrHidenButton)
-        const cardDescription = getByTestId('description')
+        const cardDescription = screen.getByTestId('description')
 
         expect(cardDescription).not.toBeVisible()
     })
@@ -101,14 +85,27 @@ describe('Boards Component Page', () => {
             priority: { description: 'HIGH', code: 0 }
         }
         const removeCard = () => { }
-        const { getByTestId } = render(
+        render(
             <Card card={card} removeCard={removeCard} />
         )
         const descriptionShowedOrHidenButton = screen.getByTestId('descriptionShowedOrHidenButton')
         fireEvent.click(descriptionShowedOrHidenButton)
         fireEvent.click(descriptionShowedOrHidenButton)
-        const cardDescription = getByTestId('description')
+        const cardDescription = screen.getByTestId('description')
 
         expect(cardDescription).toBeVisible()
+    })
+})
+
+
+describe('Card Styled Component', () => {
+    it('Should check if Description is tagged as display is none', () => {
+        const tree = renderer.create(<Description getHiden={true} />).toJSON()
+        expect(tree).toHaveStyleRule('display', 'none')
+    })
+
+    it('Should check if Description is tagged as display is flex', () => {
+        const tree = renderer.create(<Description getHiden={false} />).toJSON()
+        expect(tree).toHaveStyleRule('display', 'block')
     })
 })
