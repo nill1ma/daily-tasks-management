@@ -1,18 +1,10 @@
 export interface ICard {
-    [key: string]: any,
+    [key: string]: string | CardPriority | undefined,
     id: string
     label: string
     columnId: string
     description?: string
     priority: CardPriority
-}
-
-export const mountPriotity = (reference: string) => {
-    const [description, code] = reference.split('_')
-    return {
-        description,
-        code: Number(code)
-    }
 }
 
 export interface CardPriority {

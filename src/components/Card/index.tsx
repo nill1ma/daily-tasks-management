@@ -1,5 +1,5 @@
 import { faCompressAlt, faEdit, faExpandAlt, faSave, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { DragEvent, useCallback, useState } from "react";
+import { ChangeEvent, DragEvent, useCallback, useState } from "react";
 import { useCards } from "../../contexts/cards";
 import { updateItemInLocalStorage } from "../../helpers/storage";
 import { CardPriority, ICard, PriorityReferences } from "../../schemas/card";
@@ -38,12 +38,13 @@ export default function Card({
         target.classList.remove('cardDragging')
     }
 
-    const fillCardContent = (e: React.ChangeEvent<HTMLInputElement>, cardId: string) => {
+    const fillCardContent = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, cardId: string) => {
         const { target: { name, value } } = e
         setCards((previous: ICard[]) => {
             return [...previous.map((prev: ICard) => {
-                if (prev.id === cardId)
+                if (prev.id === cardId){
                     prev[name] = name === 'priority' ? JSON.parse(value) : value
+                }
                 return prev
             })]
         })
@@ -86,9 +87,9 @@ export default function Card({
         <Footer code={codePriority}>
             <div>
                 <ChoosePriority code={codePriority}>
-                    <select disabled={editDisabled !== id} name="priority" onChange={(e: any) => fillCardContent(e, id)}>
+                    <select disabled={editDisabled !== id} name="priority" onChange={(e: ChangeEvent<HTMLSelectElement>) => fillCardContent(e, id)}>
                         {PriorityReferences.map(({ description, code }: CardPriority) => {
-                            return <SOption key={codePriority} selected={codePriority === code} code={codePriority} value={JSON.stringify({ description, code })}>{description}</SOption>
+                            return <SOption key={id} selected={codePriority === code} code={code} value={JSON.stringify({ description, code })}>{description}</SOption>
                         })}
                     </select>
                 </ChoosePriority>

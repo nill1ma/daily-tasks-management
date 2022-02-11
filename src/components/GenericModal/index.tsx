@@ -68,15 +68,6 @@ function GModal(
             <input type={'text'} onChange={(e) => setLabelOf(e.target.value)} />
             {('cards' === storageKey && handleCardAPriority) && (
                 <>
-                    <div className="priority">
-                        <select name="priority" id="priority"
-                            onChange={(e: any) => handleCardAPriority(e)}>
-                            {PriorityReferences.map(({ description, code }: CardPriority) => {
-                                return <option value={code}>{description}</option>
-                            })}
-                        </select>
-
-                    </div>
                     {seDescription ?
                         <textarea name="description" onChange={(e: any) => seDescription(e.target.value)} />
                         :

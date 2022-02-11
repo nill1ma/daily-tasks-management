@@ -133,7 +133,7 @@ export const ChoosePriority = styled.div<CardPriorityProps>`
     }
 `
 export const SOption = styled.option<CardPriorityProps>`
-    color: ${({ code }) => getColor(code)}
+    color: ${({ code }) => getColor(code)};
 `
 
 enum Colors {
