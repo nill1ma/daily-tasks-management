@@ -15,7 +15,7 @@ export default function Card({
         id,
         label,
         description,
-        priority: { description: prioritydDescription, code: codePriority }
+        priority
     },
     removeCard
 }: CardProps) {
@@ -23,6 +23,7 @@ export default function Card({
     const [getHiden, setGetHiden] = useState(false)
     const { cards, setCards } = useCards()
     const [editDisabled, setEditDisabled] = useState<string>('')
+    const [currentPriority, setCurrentPriority] = useState<CardPriority>(priority)
 
     const dragStart = (e: DragEvent | any) => {
         const { target } = e
@@ -38,18 +39,24 @@ export default function Card({
         target.classList.remove('cardDragging')
     }
 
-    const fillCardContent = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, cardId: string) => {
+    const fillCardTitleAndDescription = (e: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = e
+        fillCArd(name, value)
+    }
+
+    const fillCArd = (name: string, value: string | CardPriority) => {
         setCards((previous: ICard[]) => {
             return [...previous.map((prev: ICard) => {
-                if (prev.id === cardId){
-                    prev[name] = name === 'priority' ? JSON.parse(value) : value
+                if (prev.id === id) {
+                    prev[name] = value
                 }
                 return prev
             })]
         })
     }
+
     const save = () => {
+        fillCArd('priority', currentPriority)
         updateItemInLocalStorage<ICard>('cards', cards)
         setEditDisabled('')
     }
@@ -64,13 +71,12 @@ export default function Card({
         onDragStart={dragStart}
         onDragOver={dragOver}
         onDragEnd={dragEnd}
-        className={'cardDragble'}
-    >
+        className={'cardDragble'}>
         <Title>
             <input name="label"
                 value={label}
                 data-testid='title'
-                onChange={(e: any) => fillCardContent(e, id)}
+                onChange={(e: any) => fillCardTitleAndDescription(e)}
                 disabled={editDisabled !== id}
                 type={'text'} />
             <div className="icons">
@@ -82,14 +88,14 @@ export default function Card({
             </div>
         </Title>
         {editDisabled === id ?
-            <DescriptionTextArea data-testid='descriptionTextArea' getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardContent(e, id)} name="description" defaultValue={description} />
+            <DescriptionTextArea data-testid='descriptionTextArea' getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardTitleAndDescription(e)} name="description" defaultValue={description} />
             : <Description data-testid='description' getHiden={getHiden}>{description}</Description>}
-        <Footer code={codePriority}>
+        <Footer code={currentPriority.code}>
             <div>
-                <ChoosePriority code={codePriority}>
-                    <select disabled={editDisabled !== id} name="priority" onChange={(e: ChangeEvent<HTMLSelectElement>) => fillCardContent(e, id)}>
+                <ChoosePriority code={currentPriority.code}>
+                    <select disabled={editDisabled !== id} name="priority" onChange={(e: ChangeEvent<HTMLSelectElement>) => setCurrentPriority(JSON.parse(e.target.value))}>
                         {PriorityReferences.map(({ description, code }: CardPriority) => {
-                            return <SOption key={id} selected={codePriority === code} code={code} value={JSON.stringify({ description, code })}>{description}</SOption>
+                            return <SOption data-testid={`selectPriority${id}`} key={id} selected={currentPriority.code === code} code={code} value={JSON.stringify({ description, code })}>{description}</SOption>
                         })}
                     </select>
                 </ChoosePriority>

@@ -1,74 +1,108 @@
-import { useState } from "react";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
-import { GenericModal } from "../../components/GenericModal";
-import { useBoards } from "../../contexts/boards";
-import { addItemInLocalStorage, getLocalStorage, removeItemFromLocalStorage } from "../../helpers/storage";
-import { TActions } from "../../schemas/actions";
-import { IBoard } from "../../schemas/board";
-import { BoardsArea, BoardsContainer, Header } from "./styles";
+import { v4 as uuidv4 } from "uuid";
 import Actions from "../../components/Actions";
 import Board from "../../components/Board";
+import { GenericModal } from "../../components/GenericModal";
+import {
+	addItemInLocalStorage,
+	getLocalStorage,
+	removeItemFromLocalStorage,
+} from "../../helpers/storage";
 import { hasElementInArray } from "../../helpers/validations";
+import { TActions } from "../../schemas/actions";
+import { IBoard } from "../../schemas/board";
+import { BoardsState } from "../../schemas/stores/boards-state";
+import { addBoard } from "../../store/actions";
+import { BoardsArea, BoardsContainer, Header } from "./styles";
 
 export default function Boards() {
-    const { boards, setBoards } = useBoards()
-    const [isModalOpened, setIsModalOpened] = useState(false)
-    const [boardName, setBoardName] = useState('')
-    const navigate = useNavigate()
+	// const { setBoards } = useBoards();
+	const boards = useSelector<BoardsState, BoardsState["boards"]>(
+		(state) => state.boards
+	);
+	const dispatch = useDispatch();
+	const [isModalOpened, setIsModalOpened] = useState(false);
+	const [boardName, setBoardName] = useState("");
+	const navigate = useNavigate();
 
-    const chooseBoard = (currentId: string) => {
-        const index = boards.findIndex((board: IBoard) => board.id === currentId)
-        const { id, name } = boards[index]
-        addItemInLocalStorage('currentBoard', { id, name })
-        navigate(`/project/${currentId}`)
-    }
+	const chooseBoard = (currentId: string) => {
+		const index = boards.findIndex((board: IBoard) => board.id === currentId);
+		const { id, name } = boards[index];
+		addItemInLocalStorage("currentBoard", { id, name });
+		navigate(`/project/${currentId}`);
+	};
 
-    const handleModal = () => setIsModalOpened(prev => prev ? false : true)
+	useEffect(() => {
+		console.log(`Here are the boards, ${boards}`);
+	}, [boards]);
 
-    const actions: TActions[] = [{
-        labelOption: 'Add Board',
-        handleModal: handleModal,
-        icon: faFolderPlus
-    }]
+	const handleModal = () => setIsModalOpened((prev) => (prev ? false : true));
 
-    const save = (key: string) => {
-        const value = { id: uuidv4(), name: boardName, active: false }
-        const storage = addItemInLocalStorage<IBoard>(key, value)
-        setBoards([...storage])
-        setIsModalOpened(prev => !prev)
-    }
+	const actionsProps: TActions[] = [
+		{
+			labelOption: "Add Board",
+			handleModal: handleModal,
+			icon: faFolderPlus,
+		},
+	];
 
-    function filterByBoards(filter: string) {
-        const storage = getLocalStorage('boards')
-        const filteredBoards = storage.filter((board: IBoard) => board.name.includes(filter))
-        setBoards(hasElementInArray(filteredBoards) ? filteredBoards : storage)
-    }
-    const removeBoard = (boardId: string) => {
-        const updatedeBoards = removeItemFromLocalStorage('boards', boardId)
-        setBoards([...updatedeBoards])
-    }
+	const save = (key: string) => {
+		const value: IBoard = { id: uuidv4(), name: boardName, active: false };
+		// const storage = addItemInLocalStorage<IBoard>(key, value);
+		dispatch(addBoard(value));
+		// setBoards([...storage]);
+		setIsModalOpened((prev) => !prev);
+	};
 
-    return <BoardsContainer>
-        <GenericModal
-            label={`Add a new Board`}
-            isModalOpened={isModalOpened}
-            handleModal={handleModal}
-            setLabelOf={setBoardName}
-            save={save}
-            storageKey={'boards'}
-        />
-        <Header>
-            <Actions actions={actions} filterAction={filterByBoards} findBy="Board" />
-            <div className="projetName">
-                {(hasElementInArray(boards)) && <h3>Here are all of your boards</h3>}
-            </div>
-        </Header>
-        <BoardsArea>
-            {(hasElementInArray(boards)) ? boards.map((board: IBoard) =>
-                <Board key={board.id} project={board} chooseBoard={chooseBoard} removeBoard={removeBoard} />
-            ) : <span>There is still not boards!</span>}
-        </BoardsArea>
-    </BoardsContainer>
+	function filterByBoards(filter: string) {
+		const storage = getLocalStorage("boards");
+		const filteredBoards = storage.filter((board: IBoard) =>
+			board.name.includes(filter)
+		);
+		// setBoards(hasElementInArray(filteredBoards) ? filteredBoards : storage);
+	}
+	const removeBoard = (boardId: string) => {
+		const updatedeBoards = removeItemFromLocalStorage("boards", boardId);
+		// setBoards([...updatedeBoards]);
+	};
+
+	return (
+		<BoardsContainer>
+			<GenericModal
+				label={`Add a new Board`}
+				isModalOpened={isModalOpened}
+				handleModal={handleModal}
+				setLabelOf={setBoardName}
+				save={save}
+				storageKey={"boards"}
+			/>
+			<Header>
+				<Actions
+					actions={actionsProps}
+					filterAction={filterByBoards}
+					findBy="Board"
+				/>
+				<div className="projetName">
+					{hasElementInArray(boards) && <h3>Here are all of your boards</h3>}
+				</div>
+			</Header>
+			<BoardsArea>
+				{hasElementInArray<IBoard>(boards) ? (
+					boards.map((board: IBoard) => (
+						<Board
+							key={board.id}
+							project={board}
+							chooseBoard={chooseBoard}
+							removeBoard={removeBoard}
+						/>
+					))
+				) : (
+					<span>There is still not boards!</span>
+				)}
+			</BoardsArea>
+		</BoardsContainer>
+	);
 }

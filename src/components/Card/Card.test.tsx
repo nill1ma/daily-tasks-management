@@ -95,6 +95,30 @@ describe('Card Component', () => {
 
         expect(cardDescription).toBeVisible()
     })
+
+    it('Should update a card and find new informations in screen', () => {
+        let card: ICard = {
+            id: '1',
+            columnId: '1',
+            label: 'Planning travell',
+            description: 'Planning all of the travell burocracies',
+            priority: { description: 'HIGH', code: 0 }
+        }
+        const removeCard = () => { }
+        const {rerender} = render(
+            <Card card={card} removeCard={removeCard} />
+        )
+
+        const input = screen.getByTestId('title')
+        const textarea = screen.getByTestId('description')
+        const select = screen.getAllByTestId('selectPriority1')
+        userEvent.type(input, 'Updated Card')
+        userEvent.type(textarea, 'Updated text Card')
+        const saveEdition = screen.getByTestId('saveEdition')
+        // let option = select.find()
+        // userEvent.selectOptions(select, JSON.stringify({ description: 'LOW', code: 2 }))
+        fireEvent.click(saveEdition)
+    })
 })
 
 

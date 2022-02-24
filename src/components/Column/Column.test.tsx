@@ -10,6 +10,7 @@ describe('Boards Component Page', () => {
         const utils = render(
             <Column columnId={'1'} label={'Column'} handleModal={handleModal} removeColumn={removeColumn} />
         )
+        
         expect(utils).toBeDefined()
     })
 

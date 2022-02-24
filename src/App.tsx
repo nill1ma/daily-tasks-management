@@ -1,31 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Header from './components/Header';
-import BoardsProvider from './contexts/boards';
-import CardsProvider from './contexts/cards';
-import ColumnsProvider from './contexts/columns';
-import BoardPage from './pages/BoardPage';
-import Boards from './pages/Boards';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Header from "./components/Header";
+import Boards from "./pages/Boards";
 
 function App() {
-  return (
-    <div className="App">
-      <Router>
-        <Header />
-        <BoardsProvider>
-          <ColumnsProvider>
-            <CardsProvider>
-              <Routes>
-                <Route path={'/'} element={<Boards />} />
-                <Route path={'/project/:id'} element={<BoardPage />} />
-              </Routes>
-            </CardsProvider>
-          </ColumnsProvider>
-        </BoardsProvider>
-      </Router>
-    </div >
-  )
+	return (
+		<div className="App">
+			<Router>
+				<Header />
+				<Routes>
+					<Route path={"/"} element={<Boards />} />
+				</Routes>
+			</Router>
+		</div>
+	);
 }
 
 export default App;

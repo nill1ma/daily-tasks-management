@@ -1,7 +1,6 @@
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { memo, useCallback } from "react";
-import { CardPriority, PriorityReferences } from "../../schemas/card";
-import { StyledModal, CloseButton, SaveButton } from "./styles";
+import { CloseButton, SaveButton, StyledModal } from "./styles";
 
 type GenericModalProps = {
     isModalOpened: boolean
@@ -66,14 +65,6 @@ function GModal(
         <div className="field">
             {label}
             <input type={'text'} onChange={(e) => setLabelOf(e.target.value)} />
-            {('cards' === storageKey && handleCardAPriority) && (
-                <>
-                    {seDescription ?
-                        <textarea name="description" onChange={(e: any) => seDescription(e.target.value)} />
-                        :
-                        <></>}
-                </>
-            )}
             <SaveButton onClick={() => save(storageKey)}>Save</SaveButton>
         </div>
     </StyledModal>
