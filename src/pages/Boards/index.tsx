@@ -15,13 +15,15 @@ import { hasElementInArray } from "../../helpers/validations";
 import { TActions } from "../../schemas/actions";
 import { IBoard } from "../../schemas/board";
 import { BoardsState } from "../../schemas/stores/boards-state";
-import { addBoard } from "../../store/actions";
+import { CardsState } from "../../schemas/stores/cards-state";
+import { addBoard, deleteBoard } from "../../store/actions";
+import { RootState } from "../../store/reducers";
 import { BoardsArea, BoardsContainer, Header } from "./styles";
 
 export default function Boards() {
 	// const { setBoards } = useBoards();
-	const boards = useSelector<BoardsState, BoardsState["boards"]>(
-		(state) => state.boards
+	const boards = useSelector(
+		({ boards: { data } }: RootState) => data
 	);
 	const dispatch = useDispatch();
 	const [isModalOpened, setIsModalOpened] = useState(false);
@@ -64,8 +66,9 @@ export default function Boards() {
 		);
 		// setBoards(hasElementInArray(filteredBoards) ? filteredBoards : storage);
 	}
-	const removeBoard = (boardId: string) => {
-		const updatedeBoards = removeItemFromLocalStorage("boards", boardId);
+	const removeBoard = (board: IBoard) => {
+		// const updatedeBoards = removeItemFromLocalStorage("boards", boardId);
+		dispatch(deleteBoard(board))
 		// setBoards([...updatedeBoards]);
 	};
 

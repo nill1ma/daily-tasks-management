@@ -1,4 +1,8 @@
-const hasElementInArray = <T>(list: T[]): boolean => list && list.length > 0
+const hasElementInArray = <T>(list: T[]): boolean => {
+    const a = list && list.length > 0
+    console.log(`result: `, a)
+    return a
+}
 
 
 export {
