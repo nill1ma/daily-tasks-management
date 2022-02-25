@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
+import BoardPage from "./pages/BoardPage";
 import Boards from "./pages/Boards";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path={"/"} element={<Boards />} />
+					<Route path={`/board/:id`} element={<BoardPage />} />
 				</Routes>
 			</Router>
 		</div>

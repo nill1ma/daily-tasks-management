@@ -1,29 +1,32 @@
 import { faCompressAlt, faEdit, faExpandAlt, faSave, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { ChangeEvent, DragEvent, useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useCards } from "../../contexts/cards";
 import { updateItemInLocalStorage } from "../../helpers/storage";
 import { CardPriority, ICard, PriorityReferences } from "../../schemas/card";
+import { updateCard } from "../../store/actions";
+import { RootState } from "../../store/reducers";
 import { CardContainer, ChoosePriority, Description, DescriptionTextArea, Footer, Icon, SOption, Title } from "./styles";
 
 type CardProps = {
     card: ICard
-    removeCard: (cardId: string) => void
+    removeCard: (card: ICard) => void
 }
 
 export default function Card({
-    card: {
-        id,
-        label,
-        description,
-        priority
-    },
+    card,
     removeCard
 }: CardProps) {
 
+    const { id, label, description, priority } = card
+
     const [getHiden, setGetHiden] = useState(false)
-    const { cards, setCards } = useCards()
+    // const { cards, setCards } = useCards()
+    const dispatch = useDispatch()
+    const cards = useSelector(({ cards: { data } }: RootState) => data)
     const [editDisabled, setEditDisabled] = useState<string>('')
     const [currentPriority, setCurrentPriority] = useState<CardPriority>(priority)
+    const [fields, setFields] = useState<ICard>(card)
 
     const dragStart = (e: DragEvent | any) => {
         const { target } = e
@@ -41,23 +44,23 @@ export default function Card({
 
     const fillCardTitleAndDescription = (e: ChangeEvent<HTMLInputElement>) => {
         const { target: { name, value } } = e
-        fillCArd(name, value)
+        // fillCArd(name, value)
     }
 
-    const fillCArd = (name: string, value: string | CardPriority) => {
-        setCards((previous: ICard[]) => {
-            return [...previous.map((prev: ICard) => {
-                if (prev.id === id) {
-                    prev[name] = value
-                }
-                return prev
-            })]
+    const fillCard = (e: ChangeEvent<HTMLInputElement>) => {
+        const { target: { name, value } } = e
+        setFields((previous: ICard) => {
+            return {
+                ...previous,
+                [name]: value
+            }
         })
     }
 
     const save = () => {
-        fillCArd('priority', currentPriority)
-        updateItemInLocalStorage<ICard>('cards', cards)
+        // fillCArd('priority', currentPriority)
+        // updateItemInLocalStorage<ICard>('cards', cards)
+        dispatch(updateCard(fields))
         setEditDisabled('')
     }
 
@@ -74,9 +77,9 @@ export default function Card({
         className={'cardDragble'}>
         <Title>
             <input name="label"
-                value={label}
+                value={fields.label}
                 data-testid='title'
-                onChange={(e: any) => fillCardTitleAndDescription(e)}
+                onChange={(e: any) => fillCard(e)}
                 disabled={editDisabled !== id}
                 type={'text'} />
             <div className="icons">
@@ -88,19 +91,19 @@ export default function Card({
             </div>
         </Title>
         {editDisabled === id ?
-            <DescriptionTextArea data-testid='descriptionTextArea' getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCardTitleAndDescription(e)} name="description" defaultValue={description} />
-            : <Description data-testid='description' getHiden={getHiden}>{description}</Description>}
+            <DescriptionTextArea data-testid='descriptionTextArea' getHiden={getHiden} disabled={editDisabled !== id} onChange={(e: any) => fillCard(e)} name="description" defaultValue={fields.description} />
+            : <Description data-testid='description' getHiden={getHiden}>{fields.description}</Description>}
         <Footer code={currentPriority.code}>
             <div>
                 <ChoosePriority code={currentPriority.code}>
-                    <select disabled={editDisabled !== id} name="priority" onChange={(e: ChangeEvent<HTMLSelectElement>) => setCurrentPriority(JSON.parse(e.target.value))}>
+                    <select disabled={editDisabled !== id} name="priority" onChange={(e: ChangeEvent<HTMLSelectElement>) => fillCard(JSON.parse(e.target.value))}>
                         {PriorityReferences.map(({ description, code }: CardPriority) => {
                             return <SOption data-testid={`selectPriority${id}`} key={id} selected={currentPriority.code === code} code={code} value={JSON.stringify({ description, code })}>{description}</SOption>
                         })}
                     </select>
                 </ChoosePriority>
             </div>
-            <Icon onClick={useCallback(() => removeCard(id), [removeCard])} icon={faTrashAlt} />
+            <Icon onClick={useCallback(() => removeCard(card), [removeCard])} icon={faTrashAlt} />
         </Footer>
     </CardContainer>
 }

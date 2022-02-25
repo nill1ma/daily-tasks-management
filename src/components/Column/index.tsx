@@ -7,17 +7,23 @@ import { v4 as uuidv4 } from 'uuid';
 import { CardsArea, ColumnContainer, ColumnHeader, Icon } from "./styles";
 import Card from "../Card";
 import { hasElementInArray } from "../../helpers/validations";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/reducers";
+import { addCard, deleteCard } from "../../store/actions";
+import { ICoolumn } from "../../schemas/column";
 
 type ColumnProps = {
-    columnId: string
-    label: string
+    column: ICoolumn,
     handleModal: (isModalCard: boolean, columnId: string) => void
-    removeColumn: (columnId: string) => void
+    removeColumn: (column: ICoolumn) => void
 }
 
-export default function Column({ label, columnId, handleModal, removeColumn }: ColumnProps) {
+export default function Column({ column, handleModal, removeColumn }: ColumnProps) {
+    const { id: columnId, label } = column
 
-    const { cards, setCards } = useCards()
+    const { setCards } = useCards()
+    const dispatch = useDispatch()
+    const cards = useSelector(({ cards: { data } }: RootState) => data)
     const [columnCards, setColumnsCards] = useState<ICard[]>([] as ICard[])
 
     const getColumnCards = () => {
@@ -27,9 +33,8 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
         }
     }
 
-    const removeCard = (cardId: string) => {
-        const updatedeCards = removeItemFromLocalStorage('cards', cardId)
-        setCards([...updatedeCards])
+    const removeCard = (card: ICard) => {
+        dispatch(deleteCard(card))
     }
 
     useEffect(() => {
@@ -53,21 +58,21 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
         updateItemInLocalStorage<ICard>('cards', updatedCards)
     }
 
-    const addCard = () => {
-        const initialCardValue: ICard = {
+    const save = () => {
+        const value: ICard = {
             id: uuidv4(),
             label: '',
             columnId,
             description: '',
             priority: { description: 'HIGH', code: 0 }
         }
-        setCards([initialCardValue, ...cards])
+        dispatch(addCard(value))
     }
 
     const dragOver = (e: any) => {
         e.preventDefault()
     }
-    
+
     return <ColumnContainer onDragOver={dragOver} onDrop={drop}>
         <ColumnHeader>
             <div>
@@ -75,14 +80,14 @@ export default function Column({ label, columnId, handleModal, removeColumn }: C
                 <span>{label}</span>
             </div>
             <div>
-                <Icon onClick={() => addCard()} icon={faPlus} />
-                <Icon onClick={useCallback(() => removeColumn(columnId), [removeColumn])} icon={faTrashAlt} />
+                <Icon onClick={() => save()} icon={faPlus} />
+                <Icon onClick={useCallback(() => removeColumn(column), [removeColumn])} icon={faTrashAlt} />
             </div>
         </ColumnHeader>
         <CardsArea id={columnId} className="columnContainer">
             {columnCards.map(({ id, columnId: cardColumnId, label, description, priority }: ICard) => {
                 return cardColumnId === columnId &&
-                    <Card key={id} card={{ id, columnId: cardColumnId, label, description, priority }} removeCard={removeCard} />
+                    <Card key={id} card={{ id, columnId, label, description, priority }} removeCard={removeCard} />
             })}
         </CardsArea>
     </ColumnContainer>

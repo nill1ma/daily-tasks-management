@@ -34,7 +34,7 @@ export default function Boards() {
 		const index = boards.findIndex((board: IBoard) => board.id === currentId);
 		const { id, name } = boards[index];
 		addItemInLocalStorage("currentBoard", { id, name });
-		navigate(`/project/${currentId}`);
+		navigate(`/board/${currentId}`);
 	};
 
 	useEffect(() => {
